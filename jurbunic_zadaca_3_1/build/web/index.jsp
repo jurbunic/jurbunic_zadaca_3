@@ -14,12 +14,20 @@
     <body>
         <h1>Unos IoT uređaja</h1>
         <form action="./DodajUredjaj" method="POST">
-            <label for="naziv">naziv i adresa:</label>
+            <label for="naziv">Naziv i adresa:</label>
             <input id="naziv" name="naziv" />
             <input id="adresa" name="adresa" />
-            <input type="submit" name="geolokacija" value="Geo Lokacija"/><br/>
-            <input type="submit" name="spremi" value="Spremi"/><br/>
-            <input type="submit" name="podaci" value="Meteo podaci"/><br/>
+            <input type="submit" name="btn_geolokacija" value="Geo Lokacija"/><br/>
+            <label for="">Geolokacija: </label>
+            <input id="geolokacija" name="geolokacija" />
+            <input type="submit" name="btn_spremi" value="Spremi"/><br/>
+            <input type="submit" name="btn_podaci" value="Meteo podaci"/><br/>
+            <label for="temperatura">Temp: </label>
+            <output id="temperatura" name="temperatura" /><br/>
+            <label for="vlaga">Vlaga: </label>
+            <output id="vlaga" name="vlaga" /><br/>
+            <label for="tlak">Tlak: </label>
+            <output id="tlak" name="tlak" /><br/>
         </form>
     </body>
 </html>

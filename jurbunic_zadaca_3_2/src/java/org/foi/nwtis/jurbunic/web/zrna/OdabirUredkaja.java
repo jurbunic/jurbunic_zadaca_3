@@ -18,6 +18,8 @@ import org.foi.nwtis.jurbunic.ws.serveri.Uredjaj;
 @RequestScoped
 public class OdabirUredkaja {
 
+    String naziv;
+    String adresa;
     List<Uredjaj> uredjaji;
     String id;
 
@@ -25,6 +27,12 @@ public class OdabirUredkaja {
      * Creates a new instance of OdabirUredkaja
      */
     public OdabirUredkaja() {
+        if(uredjaji == null){
+            return;
+        }
+        for(Uredjaj u:uredjaji){
+            System.out.println(u.getNaziv());
+        }
     }
 
     public List<Uredjaj> getUredjaji() {
@@ -42,4 +50,22 @@ public class OdabirUredkaja {
     public void setId(String id) {
         this.id = id;
     }
+
+    public String getNaziv() {
+        return naziv;
+    }
+
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
+
+    public String getAdresa() {
+        return adresa;
+    }
+
+    public void setAdresa(String adresa) {
+        this.adresa = adresa;
+    }
+    
+    
 }

@@ -43,9 +43,9 @@ public class DodajUredjaj extends HttpServlet {
         naziv = request.getParameter("naziv");
         adresa = request.getParameter("adresa");
         
-        gumbGeolokacija = request.getParameter("geolokacija");
-        gumbSpremi = request.getParameter("spremi");
-        gumbPodaci = request.getParameter("podaci");
+        gumbGeolokacija = request.getParameter("btn_geolokacija");
+        gumbSpremi = request.getParameter("btn_spremi");
+        gumbPodaci = request.getParameter("btn_podaci");
 
         if(gumbGeolokacija != null){
             geoLokacija(naziv, adresa);
