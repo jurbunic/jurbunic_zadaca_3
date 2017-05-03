@@ -8,6 +8,7 @@ package org.foi.nwtis.jurbunic.web.zrna;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import org.foi.nwtis.jurbunic.ws.klijenti.MeteoWSKlijent;
 import org.foi.nwtis.jurbunic.ws.serveri.Uredjaj;
 
 /**
@@ -27,15 +28,10 @@ public class OdabirUredkaja {
      * Creates a new instance of OdabirUredkaja
      */
     public OdabirUredkaja() {
-        if(uredjaji == null){
-            return;
-        }
-        for(Uredjaj u:uredjaji){
-            System.out.println(u.getNaziv());
-        }
     }
 
     public List<Uredjaj> getUredjaji() {
+        uredjaji = MeteoWSKlijent.dajSveUredjaje();
         return uredjaji;
     }
 

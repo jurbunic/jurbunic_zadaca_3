@@ -5,13 +5,24 @@
  */
 package org.foi.nwtis.jurbunic.ws.serveri;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.Resource;
+import javax.faces.context.FacesContext;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
+import javax.servlet.ServletContext;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 import org.foi.nwtis.dkermek.web.podaci.MeteoPodaci;
+import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
 import org.foi.nwtis.jurbunic.web.podaci.Lokacija;
 import org.foi.nwtis.jurbunic.web.podaci.Uredjaj;
 
@@ -21,14 +32,31 @@ import org.foi.nwtis.jurbunic.web.podaci.Uredjaj;
  */
 @WebService(serviceName = "GeoMeteoWS")
 public class GeoMeteoWS {
+    @Resource
+    private WebServiceContext context;
+    
     @WebMethod(operationName = "dajSveUredjaje")
-    public List<Uredjaj> dajSveUredjaje(){
+    public List<Uredjaj> dajSveUredjaje() throws ClassNotFoundException{
         //TODO dohvati uredaje iz baze;
         //http://localhost:8084/jurbunic_zadaca_3_1/GeoMeteoWS?WSDL
-        int i=0;
-        ArrayList<Uredjaj> uredjaji = new ArrayList<>();
-        uredjaji.add(new Uredjaj(i++, "Samsung", new Lokacija("2.3", "3.4")));
-        uredjaji.add(new Uredjaj(i++, "IoT", new Lokacija("7.3", "11.2")));
+        List<Uredjaj> uredjaji = new ArrayList<>();
+        
+        ServletContext sc = (ServletContext) context.getMessageContext().get(MessageContext.SERVLET_CONTEXT);
+        BP_Konfiguracija bp = (BP_Konfiguracija) sc.getAttribute("BP_Konfig");
+        Class.forName(bp.getDriverDatabase());
+        try(Connection con = DriverManager.getConnection(bp.getServerDatabase()+bp.getUserDatabase(),
+                bp.getUserUsername(), bp.getUserPassword())){
+            String sql = "SELECT * FROM UREDAJI";
+            Statement naredba = con.createStatement();
+            ResultSet odgovor = naredba.executeQuery(sql);
+            while(odgovor.next()){
+                //TODO popraviti dohvat;
+                uredjaji.add(new Uredjaj(odgovor.getInt(1), odgovor.getString(2), new Lokacija(String.valueOf(odgovor.getLong(3)), String.valueOf(odgovor.getLong(4)))));
+            }
+        }catch(SQLException e){
+            return uredjaji;
+        }
+        
         return uredjaji;
     }
     @WebMethod(operationName = "dodajUredaj")
