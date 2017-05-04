@@ -16,7 +16,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import org.foi.nwtis.dkermek.web.podaci.MeteoPodaci;
+import org.foi.nwtis.jurbunic.web.podaci.MeteoPodaci;
 
 /**
  *

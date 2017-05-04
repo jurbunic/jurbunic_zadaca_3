@@ -6,13 +6,12 @@
 package org.foi.nwtis.jurbunic.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.foi.nwtis.dkermek.web.podaci.MeteoPodaci;
+import org.foi.nwtis.jurbunic.web.podaci.MeteoPodaci;
 import org.foi.nwtis.jurbunic.rest.klijenti.GMKlijent;
 import org.foi.nwtis.jurbunic.rest.klijenti.OWMKlijent;
 import org.foi.nwtis.jurbunic.web.podaci.Lokacija;
