@@ -3,8 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/FOI/VIII.%20Semestar/NWTiS/zadace/jurbunic_zadaca_3/jurbunic_zadaca_3_1/web/index.jsp</file>
-            <file>file:/D:/FOI/VIII.%20Semestar/NWTiS/zadace/jurbunic_zadaca_3/jurbunic_zadaca_3_1/src/java/org/foi/nwtis/jurbunic/web/DodajUredjaj.java</file>
+            <file>file:/D:/FOI/VIII.%20Semestar/NWTiS/zadace/jurbunic_zadaca_3/jurbunic_zadaca_3_1/src/java/org/foi/nwtis/jurbunic/web/slusaci/SlusacAplikacije.java</file>
+            <file>file:/D:/FOI/VIII.%20Semestar/NWTiS/zadace/jurbunic_zadaca_3/jurbunic_zadaca_3_1/src/java/org/foi/nwtis/jurbunic/rest/serveri/MeteoRESTResource.java</file>
+            <file>file:/D:/FOI/VIII.%20Semestar/NWTiS/zadace/jurbunic_zadaca_3/jurbunic_zadaca_3_1/src/java/org/foi/nwtis/jurbunic/rest/serveri/MeteoRESTResourceContainer.java</file>
+            <file>file:/D:/FOI/VIII.%20Semestar/NWTiS/zadace/jurbunic_zadaca_3/jurbunic_zadaca_3_1/src/java/org/foi/nwtis/jurbunic/rest/klijenti/GMKlijent.java</file>
             <file>file:/D:/FOI/VIII.%20Semestar/NWTiS/zadace/jurbunic_zadaca_3/jurbunic_zadaca_3_1/src/java/org/foi/nwtis/jurbunic/ws/serveri/GeoMeteoWS.java</file>
         </group>
     </open-files>
