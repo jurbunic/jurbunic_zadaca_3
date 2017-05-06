@@ -5,8 +5,16 @@
  */
 package org.foi.nwtis.jurbunic.rest.serveri;
 
-import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.Consumes;
@@ -15,8 +23,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.core.MediaType;
-import org.foi.nwtis.jurbunic.web.podaci.Lokacija;
-import org.foi.nwtis.jurbunic.web.podaci.Uredjaj;
+import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
+import org.foi.nwtis.jurbunic.web.podaci.MeteoPodaci;
+import javax.servlet.ServletContext;
+import javax.ws.rs.core.Context;
 
 /**
  * REST Web Service
@@ -26,7 +36,9 @@ import org.foi.nwtis.jurbunic.web.podaci.Uredjaj;
 public class MeteoRESTResource {
 
     private String id;
-
+    @Context
+    private ServletContext sc;
+    
     /**
      * Creates a new instance of MeteoRESTResource
      */
@@ -37,7 +49,7 @@ public class MeteoRESTResource {
     /**
      * Get instance of the MeteoRESTResource
      */
-    public static MeteoRESTResource getInstance(String id) {
+    public static MeteoRESTResource getInstance(String id) {      
         // The user may use some kind of persistence mechanism
         // to store and restore instances of MeteoRESTResource class.
         return new MeteoRESTResource(id);
@@ -51,22 +63,57 @@ public class MeteoRESTResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJson() {
+    public String getJson() throws ClassNotFoundException {
         //TODO return proper representation object
-        int i = 0;
-        ArrayList<Uredjaj> uredjaji = new ArrayList<>();
-        uredjaji.add(new Uredjaj(i++, "Samsung", new Lokacija("2.3", "3.4")));
-        uredjaji.add(new Uredjaj(i++, "IoT", new Lokacija("7.3", "11.2")));
-        JsonObjectBuilder jo = Json.createObjectBuilder();
-        for (Uredjaj u : uredjaji) {
-            if (u.getId() == Long.parseLong(this.id)) {
-                jo.add("id", u.getId());
-                jo.add("naziv", u.getNaziv());
-                jo.add("lat", u.getGeoloc().getLatitude());
-                jo.add("log", u.getGeoloc().getLongitude());
-                break;
+        JsonObjectBuilder jo = Json.createObjectBuilder();      
+        String sql = "SELECT * FROM METEO WHERE ID=" + id;
+        BP_Konfiguracija bp = (BP_Konfiguracija) sc.getAttribute("BP_Konfig");
+        List<MeteoPodaci> mp = new ArrayList<>();
+        Class.forName(bp.getDriverDatabase());
+        try (Connection con = DriverManager.getConnection(bp.getServerDatabase() + bp.getUserDatabase(),
+                bp.getUserUsername(), bp.getUserPassword())) {
+            Statement naredba = con.createStatement();
+            ResultSet odgovor = naredba.executeQuery(sql);
+            while (odgovor.next()) {
+
+                mp.add(new MeteoPodaci(new Date(), new Date(), odgovor.getFloat(8), odgovor.getFloat(9), odgovor.getFloat(10),
+                        "C", odgovor.getFloat(11), "vlaznost", odgovor.getFloat(12), "hPa", odgovor.getFloat(13), "sjeverac",
+                        odgovor.getFloat(14), "", "", 1, "", "", 2.2f, "", "", 3, "", "", odgovor.getDate(15)));
+
             }
+
+            for (MeteoPodaci m : mp) {
+                jo.add("sunRise", m.getSunRise().toString());
+                jo.add("sunSet", m.getSunSet().toString());
+                jo.add("temperatureValue", m.getTemperatureValue());
+                jo.add("temperatureMin", m.getTemperatureMin());
+                jo.add("temperatureMax", m.getTemperatureMax());
+                jo.add("temperatureUnit", m.getTemperatureUnit());
+                jo.add("humidityValue", m.getHumidityValue());
+                jo.add("humidityUnit", m.getHumidityUnit());
+                jo.add("pressureValue", m.getPressureValue());
+                jo.add("pressureUnit", m.getPrecipitationUnit());
+                jo.add("windSpeedValue", m.getWindSpeedValue());
+                jo.add("windSpeedName", m.getWindSpeedName());
+                jo.add("windDirectionValue", m.getWindDirectionValue());
+                jo.add("windDirectionCode", m.getWindDirectionCode());
+                jo.add("windDirectionName", m.getWindDirectionName());
+                jo.add("cloudsValue", m.getCloudsValue());
+                jo.add("cloudsName", m.getCloudsName());
+                jo.add("visibility", m.getVisibility());
+                jo.add("precipitationValue", m.getPrecipitationValue());
+                jo.add("precipitationMode", m.getPrecipitationMode());
+                jo.add("precipitationUnit", m.getPrecipitationUnit());
+                jo.add("weatherNumber", m.getWeatherNumber());
+                jo.add("weatherValue", m.getWeatherValue());
+                jo.add("weatherIcon", m.getWeatherIcon());
+                jo.add("lastUpdate", m.getLastUpdate().toString());
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MeteoRESTResource.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return jo.build().toString();
     }
 

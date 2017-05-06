@@ -11,22 +11,19 @@
             <h:outputText value="Naziv i adresa: "/>
             <h:inputText value="#{odabirUredkaja.naziv}" />
             <h:inputText value="#{odabirUredkaja.adresa}"/>
-            <h:commandButton value="Upiši SOAP" /> <br/>
+            <h:commandButton value="Upiši SOAP" action="#{odabirUredkaja.dodajUredaj()}"/> <br/>
             <h:commandButton value="Upiši REST" /> <br/>
             <h:outputLabel>Uređaji:</h:outputLabel>
-            <h:selectManyListbox value="#{odabirUredkaja.id}" size="7">
+            <h:selectManyListbox value="#{odabirUredkaja.uredjaji}" size="7">
                 <f:selectItems value="#{odabirUredkaja.uredjaji}" var="u"  itemLabel="#{u.id}">   
                 </f:selectItems>
             </h:selectManyListbox>
             <h:outputLabel>Od do: </h:outputLabel>
-            <h:inputText value="" />
-            <h:inputText value="" />
+            <h:inputText value="1" />
+            <h:inputText value="1" />
             <h:commandButton value="Preuzmi SOAP" />
             <h:commandButton value="Preuzmi REST" /><br/><br/>
-            <h:inputTextarea value="" cols="100" rows="10" readonly="true"/>
-           
-            
-            
+            <h:inputTextarea value="" cols="100" rows="10" readonly="true"/>      
         </h:form>
     </h:body>
 </html>

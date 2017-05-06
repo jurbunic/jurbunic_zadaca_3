@@ -24,10 +24,19 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
+    private final static QName _ClassNotFoundException_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "ClassNotFoundException");
+    private final static QName _DajMinMaxTempZaUredjaj_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajMinMaxTempZaUredjaj");
+    private final static QName _DajMinMaxTempZaUredjajResponse_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajMinMaxTempZaUredjajResponse");
+    private final static QName _DajMinMaxTlakZaUredjaj_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajMinMaxTlakZaUredjaj");
+    private final static QName _DajMinMaxTlakZaUredjajResponse_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajMinMaxTlakZaUredjajResponse");
+    private final static QName _DajMinMaxVlagaZaUredjaj_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajMinMaxVlagaZaUredjaj");
+    private final static QName _DajMinMaxVlagaZaUredjajResponse_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajMinMaxVlagaZaUredjajResponse");
     private final static QName _DajSveMeteoPodatkeZaUredjaj_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajSveMeteoPodatkeZaUredjaj");
     private final static QName _DajSveMeteoPodatkeZaUredjajResponse_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajSveMeteoPodatkeZaUredjajResponse");
     private final static QName _DajSveUredjaje_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajSveUredjaje");
     private final static QName _DajSveUredjajeResponse_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajSveUredjajeResponse");
+    private final static QName _DajZadnjeMeteoPodatkeZaUredjaj_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajZadnjeMeteoPodatkeZaUredjaj");
+    private final static QName _DajZadnjeMeteoPodatkeZaUredjajResponse_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dajZadnjeMeteoPodatkeZaUredjajResponse");
     private final static QName _DodajUredaj_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dodajUredaj");
     private final static QName _DodajUredajResponse_QNAME = new QName("http://serveri.ws.jurbunic.nwtis.foi.org/", "dodajUredajResponse");
 
@@ -36,6 +45,62 @@ public class ObjectFactory {
      * 
      */
     public ObjectFactory() {
+    }
+
+    /**
+     * Create an instance of {@link ClassNotFoundException }
+     * 
+     */
+    public ClassNotFoundException createClassNotFoundException() {
+        return new ClassNotFoundException();
+    }
+
+    /**
+     * Create an instance of {@link DajMinMaxTempZaUredjaj }
+     * 
+     */
+    public DajMinMaxTempZaUredjaj createDajMinMaxTempZaUredjaj() {
+        return new DajMinMaxTempZaUredjaj();
+    }
+
+    /**
+     * Create an instance of {@link DajMinMaxTempZaUredjajResponse }
+     * 
+     */
+    public DajMinMaxTempZaUredjajResponse createDajMinMaxTempZaUredjajResponse() {
+        return new DajMinMaxTempZaUredjajResponse();
+    }
+
+    /**
+     * Create an instance of {@link DajMinMaxTlakZaUredjaj }
+     * 
+     */
+    public DajMinMaxTlakZaUredjaj createDajMinMaxTlakZaUredjaj() {
+        return new DajMinMaxTlakZaUredjaj();
+    }
+
+    /**
+     * Create an instance of {@link DajMinMaxTlakZaUredjajResponse }
+     * 
+     */
+    public DajMinMaxTlakZaUredjajResponse createDajMinMaxTlakZaUredjajResponse() {
+        return new DajMinMaxTlakZaUredjajResponse();
+    }
+
+    /**
+     * Create an instance of {@link DajMinMaxVlagaZaUredjaj }
+     * 
+     */
+    public DajMinMaxVlagaZaUredjaj createDajMinMaxVlagaZaUredjaj() {
+        return new DajMinMaxVlagaZaUredjaj();
+    }
+
+    /**
+     * Create an instance of {@link DajMinMaxVlagaZaUredjajResponse }
+     * 
+     */
+    public DajMinMaxVlagaZaUredjajResponse createDajMinMaxVlagaZaUredjajResponse() {
+        return new DajMinMaxVlagaZaUredjajResponse();
     }
 
     /**
@@ -71,6 +136,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link DajZadnjeMeteoPodatkeZaUredjaj }
+     * 
+     */
+    public DajZadnjeMeteoPodatkeZaUredjaj createDajZadnjeMeteoPodatkeZaUredjaj() {
+        return new DajZadnjeMeteoPodatkeZaUredjaj();
+    }
+
+    /**
+     * Create an instance of {@link DajZadnjeMeteoPodatkeZaUredjajResponse }
+     * 
+     */
+    public DajZadnjeMeteoPodatkeZaUredjajResponse createDajZadnjeMeteoPodatkeZaUredjajResponse() {
+        return new DajZadnjeMeteoPodatkeZaUredjajResponse();
+    }
+
+    /**
      * Create an instance of {@link DodajUredaj }
      * 
      */
@@ -103,11 +184,90 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Throwable }
+     * 
+     */
+    public Throwable createThrowable() {
+        return new Throwable();
+    }
+
+    /**
+     * Create an instance of {@link StackTraceElement }
+     * 
+     */
+    public StackTraceElement createStackTraceElement() {
+        return new StackTraceElement();
+    }
+
+    /**
      * Create an instance of {@link MeteoPodaci }
      * 
      */
     public MeteoPodaci createMeteoPodaci() {
         return new MeteoPodaci();
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ClassNotFoundException }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "ClassNotFoundException")
+    public JAXBElement<ClassNotFoundException> createClassNotFoundException(ClassNotFoundException value) {
+        return new JAXBElement<ClassNotFoundException>(_ClassNotFoundException_QNAME, ClassNotFoundException.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DajMinMaxTempZaUredjaj }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "dajMinMaxTempZaUredjaj")
+    public JAXBElement<DajMinMaxTempZaUredjaj> createDajMinMaxTempZaUredjaj(DajMinMaxTempZaUredjaj value) {
+        return new JAXBElement<DajMinMaxTempZaUredjaj>(_DajMinMaxTempZaUredjaj_QNAME, DajMinMaxTempZaUredjaj.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DajMinMaxTempZaUredjajResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "dajMinMaxTempZaUredjajResponse")
+    public JAXBElement<DajMinMaxTempZaUredjajResponse> createDajMinMaxTempZaUredjajResponse(DajMinMaxTempZaUredjajResponse value) {
+        return new JAXBElement<DajMinMaxTempZaUredjajResponse>(_DajMinMaxTempZaUredjajResponse_QNAME, DajMinMaxTempZaUredjajResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DajMinMaxTlakZaUredjaj }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "dajMinMaxTlakZaUredjaj")
+    public JAXBElement<DajMinMaxTlakZaUredjaj> createDajMinMaxTlakZaUredjaj(DajMinMaxTlakZaUredjaj value) {
+        return new JAXBElement<DajMinMaxTlakZaUredjaj>(_DajMinMaxTlakZaUredjaj_QNAME, DajMinMaxTlakZaUredjaj.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DajMinMaxTlakZaUredjajResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "dajMinMaxTlakZaUredjajResponse")
+    public JAXBElement<DajMinMaxTlakZaUredjajResponse> createDajMinMaxTlakZaUredjajResponse(DajMinMaxTlakZaUredjajResponse value) {
+        return new JAXBElement<DajMinMaxTlakZaUredjajResponse>(_DajMinMaxTlakZaUredjajResponse_QNAME, DajMinMaxTlakZaUredjajResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DajMinMaxVlagaZaUredjaj }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "dajMinMaxVlagaZaUredjaj")
+    public JAXBElement<DajMinMaxVlagaZaUredjaj> createDajMinMaxVlagaZaUredjaj(DajMinMaxVlagaZaUredjaj value) {
+        return new JAXBElement<DajMinMaxVlagaZaUredjaj>(_DajMinMaxVlagaZaUredjaj_QNAME, DajMinMaxVlagaZaUredjaj.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DajMinMaxVlagaZaUredjajResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "dajMinMaxVlagaZaUredjajResponse")
+    public JAXBElement<DajMinMaxVlagaZaUredjajResponse> createDajMinMaxVlagaZaUredjajResponse(DajMinMaxVlagaZaUredjajResponse value) {
+        return new JAXBElement<DajMinMaxVlagaZaUredjajResponse>(_DajMinMaxVlagaZaUredjajResponse_QNAME, DajMinMaxVlagaZaUredjajResponse.class, null, value);
     }
 
     /**
@@ -144,6 +304,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "dajSveUredjajeResponse")
     public JAXBElement<DajSveUredjajeResponse> createDajSveUredjajeResponse(DajSveUredjajeResponse value) {
         return new JAXBElement<DajSveUredjajeResponse>(_DajSveUredjajeResponse_QNAME, DajSveUredjajeResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DajZadnjeMeteoPodatkeZaUredjaj }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "dajZadnjeMeteoPodatkeZaUredjaj")
+    public JAXBElement<DajZadnjeMeteoPodatkeZaUredjaj> createDajZadnjeMeteoPodatkeZaUredjaj(DajZadnjeMeteoPodatkeZaUredjaj value) {
+        return new JAXBElement<DajZadnjeMeteoPodatkeZaUredjaj>(_DajZadnjeMeteoPodatkeZaUredjaj_QNAME, DajZadnjeMeteoPodatkeZaUredjaj.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DajZadnjeMeteoPodatkeZaUredjajResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", name = "dajZadnjeMeteoPodatkeZaUredjajResponse")
+    public JAXBElement<DajZadnjeMeteoPodatkeZaUredjajResponse> createDajZadnjeMeteoPodatkeZaUredjajResponse(DajZadnjeMeteoPodatkeZaUredjajResponse value) {
+        return new JAXBElement<DajZadnjeMeteoPodatkeZaUredjajResponse>(_DajZadnjeMeteoPodatkeZaUredjajResponse_QNAME, DajZadnjeMeteoPodatkeZaUredjajResponse.class, null, value);
     }
 
     /**

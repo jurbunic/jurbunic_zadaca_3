@@ -11,6 +11,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
+import org.foi.nwtis.jurbunic.web.PreuzmiMeteoPodatke;
 
 /**
  * Web application lifecycle listener.
@@ -30,6 +31,10 @@ public class SlusacAplikacije implements ServletContextListener {
                         .getInitParameter("konfiguracija");
         BP_Konfiguracija bpkonf = new BP_Konfiguracija(datoteka);
         sce.getServletContext().setAttribute("BP_Konfig", bpkonf);
+        PreuzmiMeteoPodatke pmp = new PreuzmiMeteoPodatke();
+        pmp.setSc(context);
+        pmp.start();
+        
     }
 
     @Override

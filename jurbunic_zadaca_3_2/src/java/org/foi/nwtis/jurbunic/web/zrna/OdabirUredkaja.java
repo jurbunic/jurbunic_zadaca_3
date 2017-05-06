@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import org.foi.nwtis.jurbunic.ws.klijenti.MeteoWSKlijent;
+import org.foi.nwtis.jurbunic.ws.serveri.ClassNotFoundException_Exception;
 import org.foi.nwtis.jurbunic.ws.serveri.Uredjaj;
 
 /**
@@ -24,13 +25,21 @@ public class OdabirUredkaja {
     List<Uredjaj> uredjaji;
     String id;
 
+    Uredjaj uredaj;
+
     /**
      * Creates a new instance of OdabirUredkaja
      */
     public OdabirUredkaja() {
     }
 
-    public List<Uredjaj> getUredjaji() {
+    public void dodajUredaj() throws ClassNotFoundException_Exception {
+        uredaj = new Uredjaj();
+        uredaj.setNaziv(naziv + "-" + adresa);
+        MeteoWSKlijent.dodajUredaj(uredaj);
+    }
+
+    public List<Uredjaj> getUredjaji() throws ClassNotFoundException_Exception {
         uredjaji = MeteoWSKlijent.dajSveUredjaje();
         return uredjaji;
     }
@@ -62,6 +71,5 @@ public class OdabirUredkaja {
     public void setAdresa(String adresa) {
         this.adresa = adresa;
     }
-    
-    
+
 }

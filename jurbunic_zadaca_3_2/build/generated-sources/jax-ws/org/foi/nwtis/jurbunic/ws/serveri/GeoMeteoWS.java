@@ -8,6 +8,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Action;
+import javax.xml.ws.FaultAction;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 
@@ -27,30 +28,81 @@ public interface GeoMeteoWS {
 
     /**
      * 
+     * @param od
+     * @param id
+     * @param _do
      * @return
-     *     returns java.util.List<org.foi.nwtis.jurbunic.ws.serveri.Uredjaj>
+     *     returns java.util.List<org.foi.nwtis.jurbunic.ws.serveri.MeteoPodaci>
+     * @throws ClassNotFoundException_Exception
      */
     @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "dajSveUredjaje", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajSveUredjaje")
-    @ResponseWrapper(localName = "dajSveUredjajeResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajSveUredjajeResponse")
-    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveUredjajeRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveUredjajeResponse")
-    public List<Uredjaj> dajSveUredjaje();
+    @RequestWrapper(localName = "dajSveMeteoPodatkeZaUredjaj", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajSveMeteoPodatkeZaUredjaj")
+    @ResponseWrapper(localName = "dajSveMeteoPodatkeZaUredjajResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajSveMeteoPodatkeZaUredjajResponse")
+    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveMeteoPodatkeZaUredjajRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveMeteoPodatkeZaUredjajResponse", fault = {
+        @FaultAction(className = ClassNotFoundException_Exception.class, value = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveMeteoPodatkeZaUredjaj/Fault/ClassNotFoundException")
+    })
+    public List<MeteoPodaci> dajSveMeteoPodatkeZaUredjaj(
+        @WebParam(name = "id", targetNamespace = "")
+        int id,
+        @WebParam(name = "od", targetNamespace = "")
+        long od,
+        @WebParam(name = "do", targetNamespace = "")
+        long _do)
+        throws ClassNotFoundException_Exception
+    ;
 
     /**
      * 
-     * @param uredaj
+     * @param od
+     * @param id
+     * @param parameter1
      * @return
-     *     returns java.lang.Boolean
+     *     returns java.util.List<java.lang.Float>
+     * @throws ClassNotFoundException_Exception
      */
     @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "dodajUredaj", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DodajUredaj")
-    @ResponseWrapper(localName = "dodajUredajResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DodajUredajResponse")
-    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dodajUredajRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dodajUredajResponse")
-    public Boolean dodajUredaj(
-        @WebParam(name = "uredaj", targetNamespace = "")
-        Uredjaj uredaj);
+    @RequestWrapper(localName = "dajMinMaxTempZaUredjaj", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajMinMaxTempZaUredjaj")
+    @ResponseWrapper(localName = "dajMinMaxTempZaUredjajResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajMinMaxTempZaUredjajResponse")
+    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajMinMaxTempZaUredjajRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajMinMaxTempZaUredjajResponse", fault = {
+        @FaultAction(className = ClassNotFoundException_Exception.class, value = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajMinMaxTempZaUredjaj/Fault/ClassNotFoundException")
+    })
+    public List<Float> dajMinMaxTempZaUredjaj(
+        @WebParam(name = "id", targetNamespace = "")
+        int id,
+        @WebParam(name = "od", targetNamespace = "")
+        long od,
+        @WebParam(name = "parameter1", targetNamespace = "")
+        long parameter1)
+        throws ClassNotFoundException_Exception
+    ;
+
+    /**
+     * 
+     * @param od
+     * @param id
+     * @param parameter1
+     * @return
+     *     returns java.util.List<java.lang.Float>
+     * @throws ClassNotFoundException_Exception
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "dajMinMaxVlagaZaUredjaj", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajMinMaxVlagaZaUredjaj")
+    @ResponseWrapper(localName = "dajMinMaxVlagaZaUredjajResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajMinMaxVlagaZaUredjajResponse")
+    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajMinMaxVlagaZaUredjajRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajMinMaxVlagaZaUredjajResponse", fault = {
+        @FaultAction(className = ClassNotFoundException_Exception.class, value = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajMinMaxVlagaZaUredjaj/Fault/ClassNotFoundException")
+    })
+    public List<Float> dajMinMaxVlagaZaUredjaj(
+        @WebParam(name = "id", targetNamespace = "")
+        int id,
+        @WebParam(name = "od", targetNamespace = "")
+        long od,
+        @WebParam(name = "parameter1", targetNamespace = "")
+        long parameter1)
+        throws ClassNotFoundException_Exception
+    ;
 
     /**
      * 
@@ -58,19 +110,81 @@ public interface GeoMeteoWS {
      * @param id
      * @param _do
      * @return
-     *     returns java.util.List<org.foi.nwtis.jurbunic.ws.serveri.MeteoPodaci>
+     *     returns java.util.List<java.lang.Float>
+     * @throws ClassNotFoundException_Exception
      */
     @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "dajSveMeteoPodatkeZaUredjaj", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajSveMeteoPodatkeZaUredjaj")
-    @ResponseWrapper(localName = "dajSveMeteoPodatkeZaUredjajResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajSveMeteoPodatkeZaUredjajResponse")
-    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveMeteoPodatkeZaUredjajRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveMeteoPodatkeZaUredjajResponse")
-    public List<MeteoPodaci> dajSveMeteoPodatkeZaUredjaj(
+    @RequestWrapper(localName = "dajMinMaxTlakZaUredjaj", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajMinMaxTlakZaUredjaj")
+    @ResponseWrapper(localName = "dajMinMaxTlakZaUredjajResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajMinMaxTlakZaUredjajResponse")
+    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajMinMaxTlakZaUredjajRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajMinMaxTlakZaUredjajResponse", fault = {
+        @FaultAction(className = ClassNotFoundException_Exception.class, value = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajMinMaxTlakZaUredjaj/Fault/ClassNotFoundException")
+    })
+    public List<Float> dajMinMaxTlakZaUredjaj(
         @WebParam(name = "id", targetNamespace = "")
         int id,
         @WebParam(name = "od", targetNamespace = "")
         long od,
         @WebParam(name = "do", targetNamespace = "")
-        long _do);
+        long _do)
+        throws ClassNotFoundException_Exception
+    ;
+
+    /**
+     * 
+     * @param id
+     * @return
+     *     returns org.foi.nwtis.jurbunic.ws.serveri.MeteoPodaci
+     * @throws ClassNotFoundException_Exception
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "dajZadnjeMeteoPodatkeZaUredjaj", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajZadnjeMeteoPodatkeZaUredjaj")
+    @ResponseWrapper(localName = "dajZadnjeMeteoPodatkeZaUredjajResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajZadnjeMeteoPodatkeZaUredjajResponse")
+    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajZadnjeMeteoPodatkeZaUredjajRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajZadnjeMeteoPodatkeZaUredjajResponse", fault = {
+        @FaultAction(className = ClassNotFoundException_Exception.class, value = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajZadnjeMeteoPodatkeZaUredjaj/Fault/ClassNotFoundException")
+    })
+    public MeteoPodaci dajZadnjeMeteoPodatkeZaUredjaj(
+        @WebParam(name = "id", targetNamespace = "")
+        int id)
+        throws ClassNotFoundException_Exception
+    ;
+
+    /**
+     * 
+     * @param uredaj
+     * @return
+     *     returns java.lang.Boolean
+     * @throws ClassNotFoundException_Exception
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "dodajUredaj", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DodajUredaj")
+    @ResponseWrapper(localName = "dodajUredajResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DodajUredajResponse")
+    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dodajUredajRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dodajUredajResponse", fault = {
+        @FaultAction(className = ClassNotFoundException_Exception.class, value = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dodajUredaj/Fault/ClassNotFoundException")
+    })
+    public Boolean dodajUredaj(
+        @WebParam(name = "uredaj", targetNamespace = "")
+        Uredjaj uredaj)
+        throws ClassNotFoundException_Exception
+    ;
+
+    /**
+     * 
+     * @return
+     *     returns java.util.List<org.foi.nwtis.jurbunic.ws.serveri.Uredjaj>
+     * @throws ClassNotFoundException_Exception
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "dajSveUredjaje", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajSveUredjaje")
+    @ResponseWrapper(localName = "dajSveUredjajeResponse", targetNamespace = "http://serveri.ws.jurbunic.nwtis.foi.org/", className = "org.foi.nwtis.jurbunic.ws.serveri.DajSveUredjajeResponse")
+    @Action(input = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveUredjajeRequest", output = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveUredjajeResponse", fault = {
+        @FaultAction(className = ClassNotFoundException_Exception.class, value = "http://serveri.ws.jurbunic.nwtis.foi.org/GeoMeteoWS/dajSveUredjaje/Fault/ClassNotFoundException")
+    })
+    public List<Uredjaj> dajSveUredjaje()
+        throws ClassNotFoundException_Exception
+    ;
 
 }

@@ -25,6 +25,7 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import org.foi.nwtis.jurbunic.web.podaci.MeteoPodaci;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
+import org.foi.nwtis.jurbunic.rest.klijenti.GMKlijent;
 import org.foi.nwtis.jurbunic.web.podaci.Lokacija;
 import org.foi.nwtis.jurbunic.web.podaci.Uredjaj;
 
@@ -69,23 +70,23 @@ public class GeoMeteoWS {
         Class.forName(bp.getDriverDatabase());
         try (Connection con = DriverManager.getConnection(bp.getServerDatabase() + bp.getUserDatabase(),
                 bp.getUserUsername(), bp.getUserPassword())) {
-            String sql = "SELECT * FROM UREDAJI WHERE id=" + uredjaj.getId();
+            String sql = "SELECT MAX(ID) FROM UREDAJI";
             Statement naredba = con.createStatement();
             ResultSet odgovor = naredba.executeQuery(sql);
-            if (odgovor.next()) {
-                return false;
-            } else {
-
-                sql = "INSERT INTO UREDAJI VALUES "
-                        + "(" + uredjaj.getId() + ",'" + uredjaj.getNaziv() + "',"
-                        + uredjaj.getGeoloc().getLatitude() + ","
-                        + uredjaj.getGeoloc().getLongitude() + ","
-                        + "1,'" + new Timestamp(System.currentTimeMillis()) + "',"
-                        + "'" + new Timestamp(System.currentTimeMillis()) + "')";
-                naredba = con.createStatement();
-                naredba.executeUpdate(sql);
-                return true;
-            }
+            odgovor.next();
+            int id = odgovor.getInt(1)+1;
+            String[] inf = uredjaj.getNaziv().split("-");
+            GMKlijent gmk = new GMKlijent();
+            Lokacija l = gmk.getGeoLocation(inf[1]);
+            sql = "INSERT INTO UREDAJI VALUES "
+                    + "(" + id + ",'" + inf[0] + "',"
+                    + l.getLatitude() + ","
+                    + l.getLongitude() + ","
+                    + "1,'" + new Timestamp(System.currentTimeMillis()) + "',"
+                    + "'" + new Timestamp(System.currentTimeMillis()) + "')";
+            naredba = con.createStatement();
+            naredba.executeUpdate(sql);
+            return true;
 
         } catch (SQLException ex) {
             Logger.getLogger(GeoMeteoWS.class.getName()).log(Level.SEVERE, null, ex);
