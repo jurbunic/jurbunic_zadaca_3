@@ -12,7 +12,7 @@
             <h:inputText value="#{odabirUredkaja.naziv}" />
             <h:inputText value="#{odabirUredkaja.adresa}"/>
             <h:commandButton value="Upiši SOAP" action="#{odabirUredkaja.dodajUredaj()}"/> <br/>
-            <h:commandButton value="Upiši REST" /> <br/>
+            <h:commandButton value="Upiši REST" action="#{odabirUredkaja.upisiRESTPOST()}" /> <br/>
             <h:outputLabel>Uređaji:</h:outputLabel>
             <h:selectManyListbox value="#{odabirUredkaja.ID}" size="5">
                 <f:selectItems value="#{odabirUredkaja.uredjaji}"
@@ -21,10 +21,10 @@
                                itemValue="#{uredaj.id}" />
             </h:selectManyListbox>
             <h:outputLabel>Od do: </h:outputLabel>
-            <h:inputText value="1" />
-            <h:inputText value="1" />
+            <h:inputText value="#{odabirUredkaja.odDate}" />
+            <h:inputText value="#{odabirUredkaja.doDate}" />
             <h:commandButton value="Preuzmi SOAP" action="#{odabirUredkaja.preuzmiMeteoZa()}" />
-            <h:commandButton value="Preuzmi REST" /><br/><br/>
+            <h:commandButton value="Preuzmi REST" action="#{odabirUredkaja.preuzmiREST()}" /><br/><br/>
             <h:dataTable value="#{odabirUredkaja.meteoPodaci}" var="mp">
                 <h:column>
                     <f:facet name="header">Temperatura</f:facet>

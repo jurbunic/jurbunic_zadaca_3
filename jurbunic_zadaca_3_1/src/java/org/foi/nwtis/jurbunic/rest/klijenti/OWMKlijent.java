@@ -66,8 +66,8 @@ public class OWMKlijent {
             
             mp.setWindSpeedValue(new Double(jo.getJsonObject("wind").getJsonNumber("speed").doubleValue()).floatValue());
             mp.setWindSpeedName("");
-            
-            //mp.setWindDirectionValue(new Double(jo.getJsonObject("wind").getJsonNumber("deg").doubleValue()).floatValue());
+
+            mp.setWindDirectionValue(new Double(jo.getJsonObject("wind").getJsonNumber("deg").doubleValue()).floatValue());
             mp.setWindDirectionCode("");
             mp.setWindDirectionName("");
             

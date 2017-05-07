@@ -89,7 +89,7 @@ public class PreuzmiMeteoPodatke extends Thread{
             try (Connection con = DriverManager.getConnection(bpkonf.getServerDatabase() + bpkonf.getUserDatabase(),
                     bpkonf.getUserUsername(), bpkonf.getUserPassword())) {
                 Statement naredba = con.createStatement();
-                naredba.executeUpdate(sql);
+               // naredba.executeUpdate(sql);
             } catch (SQLException e) {
                 System.out.println(e);
             }            

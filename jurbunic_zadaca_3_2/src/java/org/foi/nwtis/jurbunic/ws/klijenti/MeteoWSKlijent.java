@@ -6,6 +6,7 @@
 package org.foi.nwtis.jurbunic.ws.klijenti;
 
 import org.foi.nwtis.jurbunic.ws.serveri.ClassNotFoundException_Exception;
+import org.foi.nwtis.jurbunic.ws.serveri.MeteoPodaci;
 
 /**
  *
@@ -29,6 +30,12 @@ public class MeteoWSKlijent {
         org.foi.nwtis.jurbunic.ws.serveri.GeoMeteoWS_Service service = new org.foi.nwtis.jurbunic.ws.serveri.GeoMeteoWS_Service();
         org.foi.nwtis.jurbunic.ws.serveri.GeoMeteoWS port = service.getGeoMeteoWSPort();
         return port.dajSveMeteoPodatkeZaUredjaj(id, od, _do);
+    }
+
+    public static MeteoPodaci dajZadnjeMeteoPodatkeZaUredjaj(int id) throws ClassNotFoundException_Exception {
+        org.foi.nwtis.jurbunic.ws.serveri.GeoMeteoWS_Service service = new org.foi.nwtis.jurbunic.ws.serveri.GeoMeteoWS_Service();
+        org.foi.nwtis.jurbunic.ws.serveri.GeoMeteoWS port = service.getGeoMeteoWSPort();
+        return port.dajZadnjeMeteoPodatkeZaUredjaj(id);
     }
     
     

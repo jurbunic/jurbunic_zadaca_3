@@ -11,8 +11,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -31,6 +34,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
+import org.foi.nwtis.jurbunic.rest.klijenti.GMKlijent;
 import org.foi.nwtis.jurbunic.web.podaci.Lokacija;
 import org.foi.nwtis.jurbunic.web.podaci.Uredjaj;
 
@@ -114,14 +118,35 @@ public class MeteoRESTResourceContainer {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postJson(String content) {
+    public Response postJson(String content) throws ClassNotFoundException {
         JsonReader reader = Json.createReader(new StringReader(content));
         JsonObject jo = reader.readObject();
-        int id = jo.getInt("id");
+        int id;
         String naziv = jo.getString("naziv");
-        String lat = jo.getString("lat");
-        String log = jo.getString("log");
-
+        String adresa = jo.getString("adresa");
+        GMKlijent gm = new GMKlijent();
+        Lokacija l = gm.getGeoLocation(adresa);
+       
+        String lat = String.valueOf(l.getLatitude());
+        String log = String.valueOf(l.getLongitude());
+        String sql = "SELECT MAX(ID) FROM UREDAJI";
+        BP_Konfiguracija bp = (BP_Konfiguracija) sc.getAttribute("BP_Konfig");
+        Class.forName(bp.getDriverDatabase());
+        try (Connection con = DriverManager.getConnection(bp.getServerDatabase() + bp.getUserDatabase(),
+                bp.getUserUsername(), bp.getUserPassword())) {
+            Statement naredba = con.createStatement();
+            ResultSet odgovor = naredba.executeQuery(sql);
+            odgovor.next();
+            id = odgovor.getInt(1)+1;
+            String insert = "INSERT INTO UREDAJI VALUES("+id+",'"+naziv+"',"
+                    +Float.parseFloat(lat)+","+Float.parseFloat(log)+",1,'"
+                    +new Timestamp(System.currentTimeMillis())+"','"+new Timestamp(System.currentTimeMillis())+"')";
+            naredba = con.createStatement();
+            naredba.executeUpdate(insert);
+        } catch (SQLException ex) {
+            Logger.getLogger(MeteoRESTResourceContainer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         //todo upisi u uredaj u bazi podataka!
         return Response.created(context.getAbsolutePath()).build();
     }
@@ -131,6 +156,6 @@ public class MeteoRESTResourceContainer {
      */
     @Path("{id}")
     public MeteoRESTResource getMeteoRESTResource(@PathParam("id") String id) {
-        return MeteoRESTResource.getInstance(id);
+        return MeteoRESTResource.getInstance(id, sc);
     }
 }

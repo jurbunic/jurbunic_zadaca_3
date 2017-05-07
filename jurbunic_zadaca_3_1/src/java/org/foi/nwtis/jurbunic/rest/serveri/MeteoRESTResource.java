@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -26,7 +27,6 @@ import javax.ws.rs.core.MediaType;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
 import org.foi.nwtis.jurbunic.web.podaci.MeteoPodaci;
 import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
 
 /**
  * REST Web Service
@@ -36,7 +36,6 @@ import javax.ws.rs.core.Context;
 public class MeteoRESTResource {
 
     private String id;
-    @Context
     private ServletContext sc;
     
     /**
@@ -46,6 +45,10 @@ public class MeteoRESTResource {
         this.id = id;
     }
 
+    private MeteoRESTResource(String id, ServletContext sc){
+        this.id = id;
+        this.sc = sc;
+    }
     /**
      * Get instance of the MeteoRESTResource
      */
@@ -53,6 +56,10 @@ public class MeteoRESTResource {
         // The user may use some kind of persistence mechanism
         // to store and restore instances of MeteoRESTResource class.
         return new MeteoRESTResource(id);
+    }
+    
+    public static MeteoRESTResource getInstance(String id, ServletContext sc){
+        return new MeteoRESTResource(id, sc);
     }
 
     /**
@@ -65,8 +72,9 @@ public class MeteoRESTResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() throws ClassNotFoundException {
         //TODO return proper representation object
+        JsonArrayBuilder jab = Json.createArrayBuilder();
         JsonObjectBuilder jo = Json.createObjectBuilder();      
-        String sql = "SELECT * FROM METEO WHERE ID=" + id;
+        String sql = "SELECT * FROM METEO WHERE ID=" + Integer.valueOf(id);
         BP_Konfiguracija bp = (BP_Konfiguracija) sc.getAttribute("BP_Konfig");
         List<MeteoPodaci> mp = new ArrayList<>();
         Class.forName(bp.getDriverDatabase());
@@ -75,13 +83,11 @@ public class MeteoRESTResource {
             Statement naredba = con.createStatement();
             ResultSet odgovor = naredba.executeQuery(sql);
             while (odgovor.next()) {
-
                 mp.add(new MeteoPodaci(new Date(), new Date(), odgovor.getFloat(8), odgovor.getFloat(9), odgovor.getFloat(10),
-                        "C", odgovor.getFloat(11), "vlaznost", odgovor.getFloat(12), "hPa", odgovor.getFloat(13), "sjeverac",
-                        odgovor.getFloat(14), "", "", 1, "", "", 2.2f, "", "", 3, "", "", odgovor.getDate(15)));
+                        "celsius", odgovor.getFloat(11), "vlaznost", odgovor.getFloat(12), "hPa", odgovor.getFloat(13), "sjeverac",
+                        odgovor.getFloat(14), "", "", 1, "-", "-", 2.2f, "", "", odgovor.getInt(6),odgovor.getString(7) , "", odgovor.getDate(15)));
 
             }
-
             for (MeteoPodaci m : mp) {
                 jo.add("sunRise", m.getSunRise().toString());
                 jo.add("sunSet", m.getSunSet().toString());
@@ -108,13 +114,14 @@ public class MeteoRESTResource {
                 jo.add("weatherValue", m.getWeatherValue());
                 jo.add("weatherIcon", m.getWeatherIcon());
                 jo.add("lastUpdate", m.getLastUpdate().toString());
+                jab.add(jo);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(MeteoRESTResource.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return jo.build().toString();
+        return jab.build().toString();
     }
 
     /**

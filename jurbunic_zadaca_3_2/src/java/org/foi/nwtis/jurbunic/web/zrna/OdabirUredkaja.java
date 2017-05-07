@@ -5,9 +5,27 @@
  */
 package org.foi.nwtis.jurbunic.web.zrna;
 
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.stream.JsonParser;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import org.foi.nwtis.jurbunic.ws.klijenti.MeteoWSKlijent;
 import org.foi.nwtis.jurbunic.ws.serveri.ClassNotFoundException_Exception;
 import org.foi.nwtis.jurbunic.ws.serveri.MeteoPodaci;
@@ -26,11 +44,11 @@ public class OdabirUredkaja {
     List<Uredjaj> uredjaji;
     List<MeteoPodaci> meteoPodaci;
     Integer[] ID;
-    
+
     Uredjaj uredaj;
     String odDate;
     String doDate;
-    
+
     /**
      * Creates a new instance of OdabirUredkaja
      */
@@ -43,14 +61,77 @@ public class OdabirUredkaja {
         MeteoWSKlijent.dodajUredaj(uredaj);
     }
 
-    public void preuzmiMeteoZa() throws ClassNotFoundException_Exception {
-        int b = ID[0];
-        meteoPodaci = MeteoWSKlijent.dajSveMeteoPodatkeZaUredjaj(b, 
-                1483806002312l, 
-                System.currentTimeMillis());
+    public void preuzmiMeteoZa() throws ClassNotFoundException_Exception, ParseException {
+        int id = ID[0];
+        if (odDate.isEmpty() || doDate.isEmpty()) {
+            preuzmiZadnje();
+        } else {
+            DateFormat df = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+            Date from = df.parse(odDate);
+            Date to = df.parse(doDate);
+            meteoPodaci = MeteoWSKlijent.dajSveMeteoPodatkeZaUredjaj(id,
+                    from.getTime(),
+                    to.getTime());
+        }
 
     }
 
+    public void preuzmiZadnje() throws ClassNotFoundException_Exception {
+        int id = ID[0];
+        meteoPodaci = new ArrayList<>();
+        meteoPodaci.add(MeteoWSKlijent.dajZadnjeMeteoPodatkeZaUredjaj(id));
+    }
+
+    public void upisiRESTPOST() throws MalformedURLException {
+        MeteoRESTResourceContainer_JerseyClient mr = new MeteoRESTResourceContainer_JerseyClient();
+
+        JsonObjectBuilder jo = Json.createObjectBuilder();
+        jo.add("naziv", naziv);
+        jo.add("adresa", adresa);
+        mr.postJson(jo.build().toString());
+    }
+
+    public void preuzmiREST() {
+        meteoPodaci = new ArrayList<>();
+        for (int j = 0; j < ID.length; j++) {
+            MeteoRESTResourceContainer_JerseyClient mr = new MeteoRESTResourceContainer_JerseyClient(String.valueOf(ID[j]));
+            String neociscenJson = mr.getJson();
+            JsonReader jsonCitac = Json.createReader(new StringReader(neociscenJson));
+            JsonArray array = jsonCitac.readArray();
+            for (int i = 0; i < array.size(); i++) {
+                JsonObject objekt = array.getJsonObject(i);
+                MeteoPodaci mp = new MeteoPodaci();
+                //mp.setSunRise(objekt.getString("sunRise"));
+                //mp.setSunSet(objekt.getString("sunSet"));
+                mp.setTemperatureValue(Float.valueOf(objekt.get("temperatureValue").toString()));
+                mp.setTemperatureMin(Float.valueOf(objekt.get("temperatureMin").toString()));
+                mp.setTemperatureMax(Float.valueOf(objekt.get("temperatureMax").toString()));
+                mp.setTemperatureUnit(objekt.get("temperatureUnit").toString());
+                mp.setHumidityValue(Float.valueOf(objekt.get("humidityValue").toString()));
+                mp.setHumidityUnit(objekt.get("humidityUnit").toString());
+                mp.setPressureValue(Float.valueOf(objekt.get("pressureValue").toString()));
+                mp.setPrecipitationUnit(objekt.get("precipitationUnit").toString());
+                mp.setWindSpeedValue(Float.valueOf(objekt.get("windSpeedValue").toString()));
+                mp.setWindSpeedName(objekt.get("windSpeedName").toString());
+                mp.setWindDirectionValue(Float.valueOf(objekt.get("windDirectionValue").toString()));
+                mp.setWindDirectionCode(objekt.get("windDirectionCode").toString());
+                mp.setWindDirectionName(objekt.get("windDirectionName").toString());
+                mp.setCloudsValue(objekt.getInt("cloudsValue"));
+                mp.setCloudsName(objekt.get("cloudsName").toString());
+                mp.setVisibility(objekt.get("visibility").toString());
+                mp.setPrecipitationValue(Float.valueOf(objekt.get("precipitationValue").toString()));
+                mp.setPrecipitationMode(objekt.get("precipitationMode").toString());
+                mp.setPrecipitationUnit(objekt.get("precipitationUnit").toString());
+                mp.setWeatherNumber(objekt.getInt("weatherNumber"));
+                mp.setWeatherValue(objekt.get("weatherValue").toString());
+                mp.setWeatherIcon(objekt.get("weatherIcon").toString());
+                //mp.setLastUpdate(new Date));
+                meteoPodaci.add(mp);
+            }
+        }
+    }
+
+    //-------------GS--------------------
     public List<Uredjaj> getUredjaji() throws ClassNotFoundException_Exception {
         uredjaji = MeteoWSKlijent.dajSveUredjaje();
         return uredjaji;
@@ -92,6 +173,50 @@ public class OdabirUredkaja {
         this.meteoPodaci = meteoPodaci;
     }
 
-    
-    
+    public String getOdDate() {
+        return odDate;
+    }
+
+    public void setOdDate(String odDate) {
+        this.odDate = odDate;
+    }
+
+    public String getDoDate() {
+        return doDate;
+    }
+
+    public void setDoDate(String doDate) {
+        this.doDate = doDate;
+    }
+
+    static class MeteoRESTResourceContainer_JerseyClient {
+
+        private WebTarget webTarget;
+        private Client client;
+        private static final String BASE_URI = "http://localhost:8084/jurbunic_zadaca_3_1/webresources";
+
+        public MeteoRESTResourceContainer_JerseyClient() {
+            client = javax.ws.rs.client.ClientBuilder.newClient();
+            webTarget = client.target(BASE_URI).path("meteoREST");
+        }
+
+        public MeteoRESTResourceContainer_JerseyClient(String id) {
+            client = javax.ws.rs.client.ClientBuilder.newClient();
+            webTarget = client.target(BASE_URI).path("meteoREST/" + id);
+        }
+
+        public Response postJson(Object requestEntity) throws ClientErrorException {
+            return webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
+        }
+
+        public String getJson() throws ClientErrorException {
+            WebTarget resource = webTarget;
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(String.class);
+        }
+
+        public void close() {
+            client.close();
+        }
+    }
+
 }

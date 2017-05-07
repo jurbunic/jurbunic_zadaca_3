@@ -103,6 +103,7 @@ public class GeoMeteoWS {
         List<MeteoPodaci> mp = new ArrayList<MeteoPodaci>();
         ServletContext sc = (ServletContext) context.getMessageContext().get(MessageContext.SERVLET_CONTEXT);
         BP_Konfiguracija bp = (BP_Konfiguracija) sc.getAttribute("BP_Konfig");
+        String a = bp.getDriverDatabase();
         Class.forName(bp.getDriverDatabase());
         try (Connection con = DriverManager.getConnection(bp.getServerDatabase() + bp.getUserDatabase(),
                 bp.getUserUsername(), bp.getUserPassword())) {
