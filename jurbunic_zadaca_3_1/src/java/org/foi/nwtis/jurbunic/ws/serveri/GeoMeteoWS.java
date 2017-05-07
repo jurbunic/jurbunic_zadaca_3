@@ -53,7 +53,6 @@ public class GeoMeteoWS {
             Statement naredba = con.createStatement();
             ResultSet odgovor = naredba.executeQuery(sql);
             while (odgovor.next()) {
-                //TODO popraviti dohvat;
                 uredjaji.add(new Uredjaj(odgovor.getInt(1), odgovor.getString(2), new Lokacija(String.valueOf(odgovor.getLong(3)), String.valueOf(odgovor.getLong(4)))));
             }
         } catch (SQLException e) {
@@ -113,7 +112,7 @@ public class GeoMeteoWS {
             while (odgovor.next()) {
                 mp.add(new MeteoPodaci(new Date(), new Date(), odgovor.getFloat(8), odgovor.getFloat(9), odgovor.getFloat(10),
                         "C", odgovor.getFloat(11), "vlaznost", odgovor.getFloat(12), "hPa", odgovor.getFloat(13), "sjeverac",
-                        odgovor.getFloat(14), "", "", 1, "", "", 2.2f, "", "", 3, "", "", odgovor.getDate(15)));
+                        odgovor.getFloat(14), "", "", 1, "", "", 2.2f, "", "", 3, "Opis", "", odgovor.getDate(15)));
             }
             return mp;
         } catch (SQLException e) {

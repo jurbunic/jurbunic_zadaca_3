@@ -10,6 +10,7 @@ import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import org.foi.nwtis.jurbunic.ws.klijenti.MeteoWSKlijent;
 import org.foi.nwtis.jurbunic.ws.serveri.ClassNotFoundException_Exception;
+import org.foi.nwtis.jurbunic.ws.serveri.MeteoPodaci;
 import org.foi.nwtis.jurbunic.ws.serveri.Uredjaj;
 
 /**
@@ -23,10 +24,13 @@ public class OdabirUredkaja {
     String naziv;
     String adresa;
     List<Uredjaj> uredjaji;
-    String id;
-
+    List<MeteoPodaci> meteoPodaci;
+    Integer[] ID;
+    
     Uredjaj uredaj;
-
+    String odDate;
+    String doDate;
+    
     /**
      * Creates a new instance of OdabirUredkaja
      */
@@ -39,6 +43,14 @@ public class OdabirUredkaja {
         MeteoWSKlijent.dodajUredaj(uredaj);
     }
 
+    public void preuzmiMeteoZa() throws ClassNotFoundException_Exception {
+        int b = ID[0];
+        meteoPodaci = MeteoWSKlijent.dajSveMeteoPodatkeZaUredjaj(b, 
+                1483806002312l, 
+                System.currentTimeMillis());
+
+    }
+
     public List<Uredjaj> getUredjaji() throws ClassNotFoundException_Exception {
         uredjaji = MeteoWSKlijent.dajSveUredjaje();
         return uredjaji;
@@ -46,14 +58,6 @@ public class OdabirUredkaja {
 
     public void setUredjaji(List<Uredjaj> uredjaji) {
         this.uredjaji = uredjaji;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getNaziv() {
@@ -72,4 +76,22 @@ public class OdabirUredkaja {
         this.adresa = adresa;
     }
 
+    public Integer[] getID() {
+        return ID;
+    }
+
+    public void setID(Integer[] ID) {
+        this.ID = ID;
+    }
+
+    public List<MeteoPodaci> getMeteoPodaci() {
+        return meteoPodaci;
+    }
+
+    public void setMeteoPodaci(List<MeteoPodaci> meteoPodaci) {
+        this.meteoPodaci = meteoPodaci;
+    }
+
+    
+    
 }

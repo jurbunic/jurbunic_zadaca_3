@@ -25,5 +25,13 @@ public class MeteoWSKlijent {
         return port.dodajUredaj(uredaj);
     }
 
+    public static java.util.List<org.foi.nwtis.jurbunic.ws.serveri.MeteoPodaci> dajSveMeteoPodatkeZaUredjaj(int id, long od, long _do) throws ClassNotFoundException_Exception {
+        org.foi.nwtis.jurbunic.ws.serveri.GeoMeteoWS_Service service = new org.foi.nwtis.jurbunic.ws.serveri.GeoMeteoWS_Service();
+        org.foi.nwtis.jurbunic.ws.serveri.GeoMeteoWS port = service.getGeoMeteoWSPort();
+        return port.dajSveMeteoPodatkeZaUredjaj(id, od, _do);
+    }
+    
+    
+
     
 }

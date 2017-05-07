@@ -16,9 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import javax.xml.ws.handler.MessageContext;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
-import org.foi.nwtis.jurbunic.rest.klijenti.GMKlijent;
 import org.foi.nwtis.jurbunic.rest.klijenti.OWMKlijent;
 import org.foi.nwtis.jurbunic.web.podaci.Lokacija;
 import org.foi.nwtis.jurbunic.web.podaci.MeteoPodaci;
@@ -51,9 +49,9 @@ public class PreuzmiMeteoPodatke extends Thread{
                     Lokacija l = uredjaj.getGeoloc();
                     MeteoPodaci mp = owm.getRealTimeWeather(l.getLatitude(), l.getLongitude());
                     String sql = "INSERT INTO METEO (ID,ADRESASTANICE,LATITUDE,LONGITUDE,VRIJEME,VRIJEMEOPIS,TEMP,TEMPMIN,TEMPMAX,VLAGA,TLAK,VJETAR,VJETARSMJER,PREUZETO) " +
-                                 "VALUES ("+uredjaj.getId()+", '-', "+l.getLatitude()+", "+l.getLatitude()+", '"+mp.getWeatherValue()+"', "
-                               + "'"+mp.getWeatherIcon()+"', "+mp.getTemperatureValue()+", "+mp.getTemperatureMin()+", "+mp.getTemperatureMax()+", "
-                               + mp.getHumidityValue()+", "+mp.getPressureValue()+", "+mp.getWindSpeedValue()+", "+mp.getWindDirectionCode()+", "
+                                 "VALUES ("+uredjaj.getId()+", 'jurbunic', "+l.getLatitude()+", "+l.getLatitude()+", '"+mp.getWeatherNumber()+"', "
+                               + "'"+mp.getWeatherValue()+"', "+mp.getTemperatureValue()+", "+mp.getTemperatureMin()+", "+mp.getTemperatureMax()+", "
+                               + mp.getHumidityValue()+", "+mp.getPressureValue()+", "+mp.getWindSpeedValue()+", "+mp.getWindDirectionCode()+1+", "
                                + "'"+new Timestamp(System.currentTimeMillis())+"' ) ";
                     upisMeteoBaza(sql);
                 }
@@ -93,6 +91,7 @@ public class PreuzmiMeteoPodatke extends Thread{
                 Statement naredba = con.createStatement();
                 naredba.executeUpdate(sql);
             } catch (SQLException e) {
+                System.out.println(e);
             }            
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PreuzmiMeteoPodatke.class.getName()).log(Level.SEVERE, null, ex);

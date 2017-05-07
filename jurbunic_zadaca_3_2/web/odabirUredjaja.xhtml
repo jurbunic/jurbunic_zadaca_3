@@ -14,16 +14,47 @@
             <h:commandButton value="Upiši SOAP" action="#{odabirUredkaja.dodajUredaj()}"/> <br/>
             <h:commandButton value="Upiši REST" /> <br/>
             <h:outputLabel>Uređaji:</h:outputLabel>
-            <h:selectManyListbox value="#{odabirUredkaja.uredjaji}" size="7">
-                <f:selectItems value="#{odabirUredkaja.uredjaji}" var="u"  itemLabel="#{u.id}">   
-                </f:selectItems>
+            <h:selectManyListbox value="#{odabirUredkaja.ID}" size="5">
+                <f:selectItems value="#{odabirUredkaja.uredjaji}"
+                               var="uredaj" 
+                               itemLabel="#{uredaj.naziv}"
+                               itemValue="#{uredaj.id}" />
             </h:selectManyListbox>
             <h:outputLabel>Od do: </h:outputLabel>
             <h:inputText value="1" />
             <h:inputText value="1" />
-            <h:commandButton value="Preuzmi SOAP" />
+            <h:commandButton value="Preuzmi SOAP" action="#{odabirUredkaja.preuzmiMeteoZa()}" />
             <h:commandButton value="Preuzmi REST" /><br/><br/>
-            <h:inputTextarea value="" cols="100" rows="10" readonly="true"/>      
+            <h:dataTable value="#{odabirUredkaja.meteoPodaci}" var="mp">
+                <h:column>
+                    <f:facet name="header">Temperatura</f:facet>
+                    #{mp.temperatureValue}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Temeperatura jedinica</f:facet>
+                    #{mp.temperatureUnit}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Tlak</f:facet>
+                    #{mp.pressureValue}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Tlak jedinica</f:facet>
+                    #{mp.pressureUnit}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Vlaga</f:facet>
+                    #{mp.humidityValue}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Vrijeme</f:facet>
+                    #{mp.weatherNumber}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Vrijeme opis</f:facet>
+                    #{mp.weatherValue}
+                </h:column>
+            </h:dataTable>   
         </h:form>
     </h:body>
 </html>
