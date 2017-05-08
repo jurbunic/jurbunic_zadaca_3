@@ -6,10 +6,16 @@
 package org.foi.nwtis.jurbunic.web.slusaci;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import org.foi.nwtis.jurbunic.konfiguracije.Konfiguracija;
+import org.foi.nwtis.jurbunic.konfiguracije.KonfiguracijaApstraktna;
+import org.foi.nwtis.jurbunic.konfiguracije.NeispravnaKonfiguracija;
+import org.foi.nwtis.jurbunic.konfiguracije.NemaKonfiguracije;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
 import org.foi.nwtis.jurbunic.web.PreuzmiMeteoPodatke;
 
@@ -25,15 +31,23 @@ public class SlusacAplikacije implements ServletContextListener {
     
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        context = sce.getServletContext();
-        String datoteka = context.getRealPath("/WEB-INF")
-                + File.separator + sce.getServletContext()
-                        .getInitParameter("konfiguracija");
-        BP_Konfiguracija bpkonf = new BP_Konfiguracija(datoteka);
-        sce.getServletContext().setAttribute("BP_Konfig", bpkonf);
-        PreuzmiMeteoPodatke pmp = new PreuzmiMeteoPodatke();
-        pmp.setSc(context);
-        pmp.start();
+        try {
+            context = sce.getServletContext();
+            String datoteka = context.getRealPath("/WEB-INF")
+                    + File.separator + sce.getServletContext()
+                            .getInitParameter("konfiguracija");
+            BP_Konfiguracija bpkonf = new BP_Konfiguracija(datoteka);
+            Konfiguracija konf = KonfiguracijaApstraktna.preuzmiKonfiguraciju(datoteka);
+            sce.getServletContext().setAttribute("BP_Konfig", bpkonf);
+            sce.getServletContext().setAttribute("konf", konf);
+            PreuzmiMeteoPodatke pmp = new PreuzmiMeteoPodatke();
+            pmp.setSc(context);
+            pmp.start();
+        } catch (NemaKonfiguracije ex) {
+            Logger.getLogger(SlusacAplikacije.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NeispravnaKonfiguracija ex) {
+            Logger.getLogger(SlusacAplikacije.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 

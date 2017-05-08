@@ -6,8 +6,6 @@
 package org.foi.nwtis.jurbunic.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,6 +19,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.foi.nwtis.jurbunic.konfiguracije.Konfiguracija;
+import org.foi.nwtis.jurbunic.konfiguracije.KonfiguracijaApstraktna;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
 import org.foi.nwtis.jurbunic.web.podaci.MeteoPodaci;
 import org.foi.nwtis.jurbunic.rest.klijenti.GMKlijent;
@@ -44,7 +44,7 @@ public class DodajUredjaj extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    static final String API_KEY = "8a137f80e58000b8bd42ee309da78b11";
+    String API_KEY;
 
     String temp;
     String vlaga;
@@ -52,7 +52,8 @@ public class DodajUredjaj extends HttpServlet {
 
     Lokacija lokacija;
     BP_Konfiguracija bp;
-
+    Konfiguracija konf;
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String naziv;
@@ -62,15 +63,16 @@ public class DodajUredjaj extends HttpServlet {
         String gumbPodaci;
         naziv = request.getParameter("naziv");
         adresa = request.getParameter("adresa");
-
+        konf = (Konfiguracija) request.getServletContext().getAttribute("konf");
+        API_KEY = konf.dajPostavku("apikey");
         gumbGeolokacija = request.getParameter("btn_geolokacija");
         gumbSpremi = request.getParameter("btn_spremi");
         gumbPodaci = request.getParameter("btn_podaci");
-
+        
         if (gumbGeolokacija != null) {
             geoLokacija(naziv, adresa);
         } else if (gumbSpremi != null) {
-            spremi(request, naziv);
+            spremi(request, naziv);            
         } else if (gumbPodaci != null) {
             meteoPodaci();
             request.setAttribute("temp", temp);

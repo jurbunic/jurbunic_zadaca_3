@@ -1,0 +1,50 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 28, 2017, 9:37:05 PM
+    Author     : Jurica Bunić
+*/
+
+form {
+    padding: 5%;
+    display: inline-block;
+    text-align: center;
+    margin: auto;
+    background-color: #3366ff;
+    color: white;
+}
+
+body {
+    margin: 5%;
+    text-align: center;
+    display: flex;
+    background-color: #e8e8e8;
+}
+
+input.btn-primary {
+    background-color: #3366ff;
+    border-color: #e8e8e8;
+    border-width: thin;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: white;
+    padding: 4px;
+    margin-left: 3px
+}
+
+input.btn-primary:hover{
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #3366ff;
+    padding: 4px;
+    margin-left: 3px;
+}
+
+a {
+    color: white;
+}

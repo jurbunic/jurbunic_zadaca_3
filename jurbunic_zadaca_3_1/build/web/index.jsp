@@ -9,6 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="css/jurbunic.css"/>
         <title>Unos</title>
     </head>
     <body>
@@ -29,8 +30,8 @@
                 if(request.getAttribute("lokacija")!=null){
                     out.print(request.getAttribute("lokacija"));
                 }%>"/>
-            <input type="submit" name="btn_spremi" value="Spremi"/><br/>
-            <input type="submit" name="btn_podaci" value="Meteo podaci"/><br/>
+            <input type="submit" class="btn-primary" name="btn_spremi" value="Spremi" /><br/>
+            <input type="submit" class="btn-primary" name="btn_podaci" value="Meteo podaci" /><br/>
             <label for="temperatura">Temp: </label>
             <%                
                 if (request.getAttribute("temp") == null) {

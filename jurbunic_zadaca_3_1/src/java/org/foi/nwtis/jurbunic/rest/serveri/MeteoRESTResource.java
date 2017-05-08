@@ -5,11 +5,14 @@
  */
 package org.foi.nwtis.jurbunic.rest.serveri;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +30,8 @@ import javax.ws.rs.core.MediaType;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
 import org.foi.nwtis.jurbunic.web.podaci.MeteoPodaci;
 import javax.servlet.ServletContext;
+import org.foi.nwtis.jurbunic.rest.klijenti.OWMKlijent;
+import org.foi.nwtis.jurbunic.web.podaci.Lokacija;
 
 /**
  * REST Web Service
@@ -71,11 +76,27 @@ public class MeteoRESTResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() throws ClassNotFoundException {
-        //TODO return proper representation object
-        JsonArrayBuilder jab = Json.createArrayBuilder();
+        //TODO return proper representation object       
+        //JsonArrayBuilder jab = Json.createArrayBuilder();
         JsonObjectBuilder jo = Json.createObjectBuilder();      
-        String sql = "SELECT * FROM METEO WHERE ID=" + Integer.valueOf(id);
+        String sql = "SELECT LATITUDE, LONGITUDE FROM METEO WHERE ID=" + Integer.valueOf(id);
         BP_Konfiguracija bp = (BP_Konfiguracija) sc.getAttribute("BP_Konfig");
+        Class.forName(bp.getDriverDatabase());
+        try (Connection con = DriverManager.getConnection(bp.getServerDatabase() + bp.getUserDatabase(),
+                bp.getUserUsername(), bp.getUserPassword())) {
+            Statement naredba = con.createStatement();
+            ResultSet odgovor = naredba.executeQuery(sql);
+            odgovor.next();
+            OWMKlijent owm = new OWMKlijent("8a137f80e58000b8bd42ee309da78b11");
+            MeteoPodaci mp = owm.getRealTimeWeather(String.valueOf(odgovor.getFloat(1)), String.valueOf(odgovor.getFloat(2)));
+            jo.add("temp", mp.getTemperatureValue());
+            jo.add("vlaga", mp.getHumidityValue());
+            jo.add("tlak", mp.getPressureValue());
+        } catch (SQLException ex) {
+            Logger.getLogger(MeteoRESTResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return jo.build().toString();
+        /*
         List<MeteoPodaci> mp = new ArrayList<>();
         Class.forName(bp.getDriverDatabase());
         try (Connection con = DriverManager.getConnection(bp.getServerDatabase() + bp.getUserDatabase(),
@@ -89,8 +110,10 @@ public class MeteoRESTResource {
 
             }
             for (MeteoPodaci m : mp) {
-                jo.add("sunRise", m.getSunRise().toString());
-                jo.add("sunSet", m.getSunSet().toString());
+                DateFormat df = new SimpleDateFormat("dd.mm.yyyy hh:MM:ss:SS");
+                
+                jo.add("sunRise", df.format(m.getSunRise()));
+                jo.add("sunSet", df.format(m.getSunSet()));
                 jo.add("temperatureValue", m.getTemperatureValue());
                 jo.add("temperatureMin", m.getTemperatureMin());
                 jo.add("temperatureMax", m.getTemperatureMax());
@@ -120,8 +143,8 @@ public class MeteoRESTResource {
         } catch (SQLException ex) {
             Logger.getLogger(MeteoRESTResource.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return jab.build().toString();
+        */
+        //return jab.build().toString();
     }
 
     /**

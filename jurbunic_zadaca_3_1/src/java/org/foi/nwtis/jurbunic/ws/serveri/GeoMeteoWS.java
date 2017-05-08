@@ -11,7 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -97,7 +100,7 @@ public class GeoMeteoWS {
      * Web service operation
      */
     @WebMethod(operationName = "dajSveMeteoPodatkeZaUredjaj")
-    public List<MeteoPodaci> dajSveMeteoPodatkeZaUredjaj(@WebParam(name = "id") int id, @WebParam(name = "od") long od, @WebParam(name = "do") long parameter1) throws ClassNotFoundException {
+    public List<MeteoPodaci> dajSveMeteoPodatkeZaUredjaj(@WebParam(name = "id") int id, @WebParam(name = "od") long od, @WebParam(name = "do") long parameter1) throws ClassNotFoundException, ParseException {
         //INSERT INTO METEO (ID,ADRESASTANICE,LONGITUDE,LATITUDE,VRIJEME,VRIJEMEOPIS,TEMP,TEMPMIN,TEMPMAX,VLAGA,TLAK,VJETAR,VJETARSMJER,PREUZETO) VALUES 
         //(2, 'Izmisljena adresa', 33.2, 17.5, 'Dobro', 'Veoma dobro', 22, 8, 25, 33, 1023, 2, 4, '2017-05-04 17:38:27.732' )
         List<MeteoPodaci> mp = new ArrayList<MeteoPodaci>();
@@ -110,10 +113,13 @@ public class GeoMeteoWS {
             String sql = "SELECT * FROM METEO WHERE ID=" + id + " AND PREUZETO BETWEEN '" + new Timestamp(od) + "' AND '" + new Timestamp(parameter1) + "'";
             Statement naredba = con.createStatement();
             ResultSet odgovor = naredba.executeQuery(sql);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             while (odgovor.next()) {
+                String ts = odgovor.getTimestamp(15).toString();
+                
                 mp.add(new MeteoPodaci(new Date(), new Date(), odgovor.getFloat(8), odgovor.getFloat(9), odgovor.getFloat(10),
                         "C", odgovor.getFloat(11), "vlaznost", odgovor.getFloat(12), "hPa", odgovor.getFloat(13), "sjeverac",
-                        odgovor.getFloat(14), "", "", 1, "", "", 2.2f, "", "", 3, "Opis", "", odgovor.getDate(15)));
+                        odgovor.getFloat(14), "", "", 1, "", "", 2.2f, "", "", Integer.parseInt(odgovor.getString(6)), odgovor.getString(7), "", sdf.parse(ts)));
             }
             return mp;
         } catch (SQLException e) {

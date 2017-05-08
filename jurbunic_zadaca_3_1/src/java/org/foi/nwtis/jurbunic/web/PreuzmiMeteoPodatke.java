@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
+import org.foi.nwtis.jurbunic.konfiguracije.Konfiguracija;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
 import org.foi.nwtis.jurbunic.rest.klijenti.OWMKlijent;
 import org.foi.nwtis.jurbunic.web.podaci.Lokacija;
@@ -28,6 +29,7 @@ import org.foi.nwtis.jurbunic.web.podaci.Uredjaj;
  */
 public class PreuzmiMeteoPodatke extends Thread{
     BP_Konfiguracija bpkonf;
+    Konfiguracija konf;
     ServletContext sc;
     boolean prekid=false;
     
@@ -41,9 +43,11 @@ public class PreuzmiMeteoPodatke extends Thread{
     public void run() {
         OWMKlijent owm = new OWMKlijent("8a137f80e58000b8bd42ee309da78b11");
         List<Uredjaj> uredaji = new ArrayList<Uredjaj>();
+        konf = (Konfiguracija) sc.getAttribute("konf");
         bpkonf = (BP_Konfiguracija) sc.getAttribute("BP_Konfig");
         while(!prekid){
             try {
+                long pocetak = System.currentTimeMillis();
                 uredaji = dohvatiUredaje();
                 for(Uredjaj uredjaj : uredaji){
                     Lokacija l = uredjaj.getGeoloc();
@@ -54,8 +58,13 @@ public class PreuzmiMeteoPodatke extends Thread{
                                + mp.getHumidityValue()+", "+mp.getPressureValue()+", "+mp.getWindSpeedValue()+", "+mp.getWindDirectionCode()+1+", "
                                + "'"+new Timestamp(System.currentTimeMillis())+"' ) ";
                     upisMeteoBaza(sql);
+                    sql = "UPDATE UREDAJI SET VRIJEME_PROMJENE ='"+new Timestamp(System.currentTimeMillis())+"' WHERE ID="+uredjaj.getId();
+                    upisMeteoBaza(sql);
                 }
-                sleep(100000);
+                long kraj = System.currentTimeMillis();
+                long ukupno = kraj-pocetak;
+                long spavanje = Long.valueOf(konf.dajPostavku("intervalDretveZaMeteoPodatke"));
+                sleep(spavanje*1000-ukupno);
             } catch (InterruptedException ex) {
                 Logger.getLogger(PreuzmiMeteoPodatke.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -89,7 +98,7 @@ public class PreuzmiMeteoPodatke extends Thread{
             try (Connection con = DriverManager.getConnection(bpkonf.getServerDatabase() + bpkonf.getUserDatabase(),
                     bpkonf.getUserUsername(), bpkonf.getUserPassword())) {
                 Statement naredba = con.createStatement();
-               // naredba.executeUpdate(sql);
+                naredba.executeUpdate(sql);
             } catch (SQLException e) {
                 System.out.println(e);
             }            

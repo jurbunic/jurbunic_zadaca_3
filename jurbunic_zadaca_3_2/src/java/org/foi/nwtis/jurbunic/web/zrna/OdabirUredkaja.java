@@ -7,25 +7,24 @@ package org.foi.nwtis.jurbunic.web.zrna;
 
 import java.io.StringReader;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
-import javax.json.stream.JsonParser;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+import javax.xml.datatype.DatatypeConfigurationException;
 import org.foi.nwtis.jurbunic.ws.klijenti.MeteoWSKlijent;
 import org.foi.nwtis.jurbunic.ws.serveri.ClassNotFoundException_Exception;
 import org.foi.nwtis.jurbunic.ws.serveri.MeteoPodaci;
@@ -48,7 +47,7 @@ public class OdabirUredkaja {
     Uredjaj uredaj;
     String odDate;
     String doDate;
-
+    
     /**
      * Creates a new instance of OdabirUredkaja
      */
@@ -78,8 +77,7 @@ public class OdabirUredkaja {
 
     public void preuzmiZadnje() throws ClassNotFoundException_Exception {
         int id = ID[0];
-        meteoPodaci = new ArrayList<>();
-        meteoPodaci.add(MeteoWSKlijent.dajZadnjeMeteoPodatkeZaUredjaj(id));
+        meteoPodaci = MeteoWSKlijent.dajSveMeteoPodatkeZaUredjaj(id,0,System.currentTimeMillis());
     }
 
     public void upisiRESTPOST() throws MalformedURLException {
@@ -91,18 +89,35 @@ public class OdabirUredkaja {
         mr.postJson(jo.build().toString());
     }
 
-    public void preuzmiREST() {
+    public void preuzmiREST() throws ParseException, DatatypeConfigurationException {
         meteoPodaci = new ArrayList<>();
         for (int j = 0; j < ID.length; j++) {
             MeteoRESTResourceContainer_JerseyClient mr = new MeteoRESTResourceContainer_JerseyClient(String.valueOf(ID[j]));
             String neociscenJson = mr.getJson();
             JsonReader jsonCitac = Json.createReader(new StringReader(neociscenJson));
+            JsonObject ob = jsonCitac.readObject();
+            MeteoPodaci mp = new MeteoPodaci();
+            mp.setTemperatureValue(Float.valueOf(ob.get("temp").toString()));
+            mp.setPressureValue(Float.valueOf(ob.get("tlak").toString()));
+            mp.setHumidityValue(Float.valueOf(ob.get("vlaga").toString()));
+            meteoPodaci.add(mp);
+            jsonCitac.close();
+            /*
             JsonArray array = jsonCitac.readArray();
             for (int i = 0; i < array.size(); i++) {
                 JsonObject objekt = array.getJsonObject(i);
                 MeteoPodaci mp = new MeteoPodaci();
-                //mp.setSunRise(objekt.getString("sunRise"));
-                //mp.setSunSet(objekt.getString("sunSet"));
+                DateFormat df = new SimpleDateFormat("dd.mm.yyyy hh:MM:ss:SS");
+                
+                Date sunset = df.parse(objekt.getString("sunSet"));
+                Date sunrise = df.parse(objekt.getString("sunRise"));
+                GregorianCalendar c = new GregorianCalendar();
+                c.setTime(sunset);
+                XMLGregorianCalendar greg = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+                mp.setSunRise(greg);
+                c.setTime(sunrise);
+                greg = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+                mp.setSunSet(greg);
                 mp.setTemperatureValue(Float.valueOf(objekt.get("temperatureValue").toString()));
                 mp.setTemperatureMin(Float.valueOf(objekt.get("temperatureMin").toString()));
                 mp.setTemperatureMax(Float.valueOf(objekt.get("temperatureMax").toString()));
@@ -125,9 +140,13 @@ public class OdabirUredkaja {
                 mp.setWeatherNumber(objekt.getInt("weatherNumber"));
                 mp.setWeatherValue(objekt.get("weatherValue").toString());
                 mp.setWeatherIcon(objekt.get("weatherIcon").toString());
-                //mp.setLastUpdate(new Date));
+                Date lastUpdate = df.parse(objekt.getString("sunRise"));
+                c.setTime(lastUpdate);
+                greg = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+                mp.setLastUpdate(greg);
                 meteoPodaci.add(mp);
             }
+        */
         }
     }
 
