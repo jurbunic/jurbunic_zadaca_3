@@ -59,6 +59,7 @@ public class MeteoRESTResourceContainer {
     }
 
     /**
+     * Metoda dohvaća sve uređaje iz baze podataka uređaja te ih vraća u json obliku
      * Retrieves representation of an instance of
      * org.foi.nwtis.jurbunic.rest.serveri.MeteoRESTResourceContainer
      *
@@ -67,7 +68,6 @@ public class MeteoRESTResourceContainer {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() throws ClassNotFoundException {
-        //todo dovrsiti da se preuzmu uredaji iz baze podataka
         ArrayList<Uredjaj> uredjaji = new ArrayList<>();
         String sql = "SELECT * FROM UREDAJI";
         BP_Konfiguracija bp = (BP_Konfiguracija) sc.getAttribute("BP_Konfig");
@@ -92,24 +92,11 @@ public class MeteoRESTResourceContainer {
         } catch (SQLException e) {
             return e.toString();
         }
-        /*int i = 0;
-        ArrayList<Uredjaj> uredjaji = new ArrayList<>();
-        uredjaji.add(new Uredjaj(i++, "Samsung", new Lokacija("2.3", "3.4")));
-        uredjaji.add(new Uredjaj(i++, "IoT", new Lokacija("7.3", "11.2")));
-        JsonArrayBuilder jab = Json.createArrayBuilder();
-        for (int j = 0; j < i; j++) {
-            JsonObjectBuilder jo = Json.createObjectBuilder();
-            jo.add("id", uredjaji.get(j).getId());
-            jo.add("naziv", uredjaji.get(j).getNaziv());
-            jo.add("lat", uredjaji.get(j).getGeoloc().getLatitude());
-            jo.add("log", uredjaji.get(j).getGeoloc().getLongitude());
-            jab.add(jo);
-        }
-        return jab.build().toString();
-         */
     }
 
     /**
+     * Metoda dobivene vrijednosti(u json formatu) parsira i zapisuje u 
+     * tablicu UREDAJI
      * POST method for creating an instance of MeteoRESTResource
      *
      * @param content representation for the new resource

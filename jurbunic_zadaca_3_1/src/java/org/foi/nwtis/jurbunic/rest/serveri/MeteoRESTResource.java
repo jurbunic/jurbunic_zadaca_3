@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import org.foi.nwtis.jurbunic.konfiguracije.bp.BP_Konfiguracija;
 import org.foi.nwtis.jurbunic.web.podaci.MeteoPodaci;
 import javax.servlet.ServletContext;
+import org.foi.nwtis.jurbunic.konfiguracije.Konfiguracija;
 import org.foi.nwtis.jurbunic.rest.klijenti.OWMKlijent;
 import org.foi.nwtis.jurbunic.web.podaci.Lokacija;
 
@@ -68,6 +69,7 @@ public class MeteoRESTResource {
     }
 
     /**
+     * Metoda dohvaća podatke sa OMW za zadani Id i vraća rezultate u json obliku
      * Retrieves representation of an instance of
      * org.foi.nwtis.jurbunic.rest.serveri.MeteoRESTResource
      *
@@ -81,13 +83,14 @@ public class MeteoRESTResource {
         JsonObjectBuilder jo = Json.createObjectBuilder();      
         String sql = "SELECT LATITUDE, LONGITUDE FROM METEO WHERE ID=" + Integer.valueOf(id);
         BP_Konfiguracija bp = (BP_Konfiguracija) sc.getAttribute("BP_Konfig");
+        Konfiguracija konf = (Konfiguracija) sc.getAttribute("konf");
         Class.forName(bp.getDriverDatabase());
         try (Connection con = DriverManager.getConnection(bp.getServerDatabase() + bp.getUserDatabase(),
                 bp.getUserUsername(), bp.getUserPassword())) {
             Statement naredba = con.createStatement();
             ResultSet odgovor = naredba.executeQuery(sql);
             odgovor.next();
-            OWMKlijent owm = new OWMKlijent("8a137f80e58000b8bd42ee309da78b11");
+            OWMKlijent owm = new OWMKlijent(konf.dajPostavku("apikey"));
             MeteoPodaci mp = owm.getRealTimeWeather(String.valueOf(odgovor.getFloat(1)), String.valueOf(odgovor.getFloat(2)));
             jo.add("temp", mp.getTemperatureValue());
             jo.add("vlaga", mp.getHumidityValue());
