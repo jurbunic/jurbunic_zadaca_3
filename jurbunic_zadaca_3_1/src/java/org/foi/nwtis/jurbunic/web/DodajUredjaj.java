@@ -53,7 +53,7 @@ public class DodajUredjaj extends HttpServlet {
     Lokacija lokacija;
     BP_Konfiguracija bp;
     Konfiguracija konf;
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String naziv;
@@ -68,20 +68,37 @@ public class DodajUredjaj extends HttpServlet {
         gumbGeolokacija = request.getParameter("btn_geolokacija");
         gumbSpremi = request.getParameter("btn_spremi");
         gumbPodaci = request.getParameter("btn_podaci");
-        
+
         if (gumbGeolokacija != null) {
-            geoLokacija(naziv, adresa);
+            if (adresa.isEmpty()) {
+                request.setAttribute("error", "Nije unesena adresa!");
+            } else {
+                geoLokacija(adresa);
+            }
+
         } else if (gumbSpremi != null) {
-            spremi(request, naziv);            
+            if (naziv.isEmpty() || adresa.isEmpty() || lokacija == null) {
+                request.setAttribute("error", "Nisu uneseni svi objekti");
+            } else {
+                spremi(request, naziv);
+            }
         } else if (gumbPodaci != null) {
-            meteoPodaci();
-            request.setAttribute("temp", temp);
-            request.setAttribute("vlaga", vlaga);
-            request.setAttribute("tlak", tlak);
+            if (lokacija == null) {
+                request.setAttribute("error", "Nema valjane geolokacije");
+            } else {
+                meteoPodaci();
+                request.setAttribute("temp", temp);
+                request.setAttribute("vlaga", vlaga);
+                request.setAttribute("tlak", tlak);
+            }
         }
         request.setAttribute("naziv", naziv);
         request.setAttribute("adresa", adresa);
-        request.setAttribute("lokacija", lokacija.getLatitude() + ", " + lokacija.getLongitude());
+        try {
+            request.setAttribute("lokacija", lokacija.getLatitude() + ", " + lokacija.getLongitude());
+        } catch (Exception e) {
+
+        }
         request.setAttribute("temp", temp);
         request.setAttribute("vlaga", vlaga);
         request.setAttribute("tlak", tlak);
@@ -127,13 +144,22 @@ public class DodajUredjaj extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void geoLokacija(String naziv, String adresa) {
+    /**
+     * Metoda dohvaća lokaciju u obliku latitude, longitude za unesenu adresu
+     * @param adresa 
+     */
+    private void geoLokacija(String adresa) {
         GMKlijent gmk = new GMKlijent();
         lokacija = gmk.getGeoLocation(adresa);
         // todo prikazi podatke u index.jsp
         // todo zapamti geo lokaciju     
     }
 
+    /**
+     * Metoda služi za spremanje uređaja u bazu podataka. 
+     * @param request - služi za dohvaćanje servlet context
+     * @param naziv - naziv uređaja
+     */
     private void spremi(HttpServletRequest request, String naziv) {
         try {
             bp = (BP_Konfiguracija) request.getServletContext().getAttribute("BP_Konfig");
@@ -164,8 +190,10 @@ public class DodajUredjaj extends HttpServlet {
         }
     }
 
+    /**
+     * Metoda dohvaća meteo podatke preko klase OWMKlijent te ih sprema u klasu MeteoPodaci
+     */
     private void meteoPodaci() {
-        // todo preuzmi APIKEY iz konfiguracijskih podataka;
         OWMKlijent owmKlijent = new OWMKlijent(API_KEY);
         MeteoPodaci mp = owmKlijent.getRealTimeWeather(lokacija.getLatitude(), lokacija.getLongitude());
         temp = mp.getTemperatureValue().toString();

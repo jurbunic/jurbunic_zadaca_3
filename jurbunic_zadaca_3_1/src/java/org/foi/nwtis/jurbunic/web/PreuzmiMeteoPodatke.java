@@ -71,6 +71,10 @@ public class PreuzmiMeteoPodatke extends Thread{
         }
     }
     
+    /**
+     * Metoda dohvaća sve uređaje (SELECT) iz baze podataka te ih sprema u listu
+     * @return lista svih uređaja
+     */
     private List<Uredjaj> dohvatiUredaje(){
         List<Uredjaj> uredaji = new ArrayList<>();
         try {           
@@ -91,7 +95,10 @@ public class PreuzmiMeteoPodatke extends Thread{
         }
         return uredaji;
     }
-    
+    /**
+     * Metoda se koristi za upis u bazu podataka (INSERT / UPDATE)
+     * @param sql sql upit
+     */
     private void upisMeteoBaza(String sql){
         try {           
             Class.forName(bpkonf.getDriverDatabase());

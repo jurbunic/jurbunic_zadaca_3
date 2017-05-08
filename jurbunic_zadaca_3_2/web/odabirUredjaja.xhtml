@@ -12,12 +12,12 @@
     <h:body>
         <h:form>
             <h:outputText value="Naziv i adresa: "/>
-            <h:inputText value="#{odabirUredkaja.naziv}" />
-            <h:inputText value="#{odabirUredkaja.adresa}"/>
-            <h:commandButton class="btn-primary" value="Upiši SOAP" action="#{odabirUredkaja.dodajUredaj()}"/> <br/>
+            <h:inputText class="txt" value="#{odabirUredkaja.naziv}" />
+            <h:inputText class="txt" value="#{odabirUredkaja.adresa}"/>
+            <h:commandButton class="btn-primary" value="Upiši SOAP" action="#{odabirUredkaja.dodajUredaj()}"/>
             <h:commandButton class="btn-primary" value="Upiši REST" action="#{odabirUredkaja.upisiRESTPOST()}" /> <br/>
             <h:outputLabel>Uređaji:</h:outputLabel>
-            <h:selectManyListbox onclick="ad()" id="listaUredaja" value="#{odabirUredkaja.ID}" size="5">
+            <h:selectManyListbox class="txt" onclick="ad()" id="listaUredaja" value="#{odabirUredkaja.ID}" size="5">
                 <f:selectItems value="#{odabirUredkaja.uredjaji}"
                                var="uredaj" 
                                itemLabel="#{uredaj.id} - #{uredaj.naziv}"
@@ -25,8 +25,8 @@
 
             </h:selectManyListbox>
             <h:outputLabel>Od do: </h:outputLabel>
-            <h:inputText value="#{odabirUredkaja.odDate}" a:placeholder="dd.MM.yyyy hh:mm:ss"/>
-            <h:inputText value="#{odabirUredkaja.doDate}" a:placeholder="dd.MM.yyyy hh:mm:ss" />
+            <h:inputText class="txt" value="#{odabirUredkaja.odDate}" a:placeholder="dd.MM.yyyy hh:mm:ss"/>
+            <h:inputText class="txt" value="#{odabirUredkaja.doDate}" a:placeholder="dd.MM.yyyy hh:mm:ss" />
             <h:commandButton class="btn-primary" id="soap" value="Preuzmi SOAP" action="#{odabirUredkaja.preuzmiMeteoZa()}" />
             <h:commandButton class="btn-primary" id="rest" value="Preuzmi REST" action="#{odabirUredkaja.preuzmiREST()}" /><br/><br/>
             <h:dataTable value="#{odabirUredkaja.meteoPodaci}" var="mp"> 
@@ -62,8 +62,8 @@
                     <f:facet name="header">Posljednje ažuriranje</f:facet>
                         #{mp.lastUpdate}
                 </h:column>
-            </h:dataTable>   
-            
+            </h:dataTable>   <br/><br/>
+            <h:outputLabel class="error" value="#{odabirUredkaja.pogreska}"/>
         </h:form>
     </h:body>
 </html>

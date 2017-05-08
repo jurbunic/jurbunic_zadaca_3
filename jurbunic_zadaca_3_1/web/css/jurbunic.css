@@ -13,15 +13,16 @@ form {
     display: inline-block;
     text-align: center;
     margin: auto;
-    background-color: #3366ff;
-    color: white;
+    border: thin;
+    border-style: solid;
+    border-color: blue;
+    color: #3366ff;
 }
 
 body {
     margin: 5%;
     text-align: center;
     display: flex;
-    background-color: #e8e8e8;
 }
 
 input.btn-primary {
@@ -37,14 +38,20 @@ input.btn-primary {
     margin-left: 3px
 }
 
+
+input.txt:hover{
+    border-color: #3366ff;
+
+}
+
 input.btn-primary:hover{
     background-color: #ffffff;
-    border-color: #ffffff;
+    border-color: #3366ff;
     color: #3366ff;
     padding: 4px;
     margin-left: 3px;
 }
 
-a {
-    color: white;
+label.error{
+    color: red;
 }

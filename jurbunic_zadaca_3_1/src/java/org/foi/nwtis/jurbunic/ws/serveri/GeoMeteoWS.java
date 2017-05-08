@@ -42,6 +42,12 @@ public class GeoMeteoWS {
     @Resource
     private WebServiceContext context;
 
+    /**
+     * Servis koji dohvaća sve uređaje iz baze i vraća ih u obliku List<Uredjaj>
+     * 
+     * @return lista uređaja
+     * @throws ClassNotFoundException 
+     */
     @WebMethod(operationName = "dajSveUredjaje")
     public List<Uredjaj> dajSveUredjaje() throws ClassNotFoundException {
         //TODO dohvati uredaje iz baze;
@@ -65,6 +71,13 @@ public class GeoMeteoWS {
         return uredjaji;
     }
 
+    /**
+     * Metoda služi za dodavanje uređaja u bazu podataka. Id se zapisuje na način da se uzme
+     * posljednji najveći Id u bazi te se uveca za jedan. Vraca true ako je sve ispravno inace false
+     * @param uredjaj
+     * @return true / false
+     * @throws ClassNotFoundException 
+     */
     @WebMethod(operationName = "dodajUredaj")
     public Boolean dodajUredaj(@WebParam(name = "uredaj") Uredjaj uredjaj) throws ClassNotFoundException {
         ServletContext sc = (ServletContext) context.getMessageContext().get(MessageContext.SERVLET_CONTEXT);
@@ -97,6 +110,7 @@ public class GeoMeteoWS {
     }
 
     /**
+     * Dohavaća sve meteo podatke za zadani Id uređaja u zadanom vremenskom rasponu
      * Web service operation
      */
     @WebMethod(operationName = "dajSveMeteoPodatkeZaUredjaj")
@@ -128,6 +142,7 @@ public class GeoMeteoWS {
     }
 
     /**
+     * Dohvaća posljenje meteo podatke za zadani Id uređaja
      * Web service operation
      */
     @WebMethod(operationName = "dajZadnjeMeteoPodatkeZaUredjaj")
@@ -153,6 +168,7 @@ public class GeoMeteoWS {
     }
 
     /**
+     * Vraća najmanju i najveću temperaturu izmjerenu na uređaju sa zadanim Id-om.
      * Web service operation
      */
     @WebMethod(operationName = "dajMinMaxTempZaUredjaj")
@@ -180,6 +196,7 @@ public class GeoMeteoWS {
     }
 
     /**
+     * Vraća najmanju i najveću vlagu izmjerenu na uređaju sa zadanim Id-om.
      * Web service operation
      */
     @WebMethod(operationName = "dajMinMaxVlagaZaUredjaj")
@@ -203,6 +220,7 @@ public class GeoMeteoWS {
     }
 
     /**
+     * Vraća najmanji i najveći tlak izmjeren na uređaju sa zadanim Id-om.
      * Web service operation
      */
     @WebMethod(operationName = "dajMinMaxTlakZaUredjaj")

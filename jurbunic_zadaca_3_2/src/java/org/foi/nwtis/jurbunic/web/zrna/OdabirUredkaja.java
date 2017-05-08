@@ -47,20 +47,41 @@ public class OdabirUredkaja {
     Uredjaj uredaj;
     String odDate;
     String doDate;
-    
+
+    String pogreska;
+
     /**
      * Creates a new instance of OdabirUredkaja
      */
     public OdabirUredkaja() {
     }
 
+    /**
+     * Metoda služi za dodavanje uređaja pozivom web servisa. Ako naziv ili adresa nisu
+     * unešeni tada se ispisuje greška.
+     * @throws ClassNotFoundException_Exception 
+     */
     public void dodajUredaj() throws ClassNotFoundException_Exception {
+        if(naziv.isEmpty() || adresa.isEmpty()){
+            pogreska = "Naziv ili adresa nije unešena";
+            return;
+        }
         uredaj = new Uredjaj();
         uredaj.setNaziv(naziv + "-" + adresa);
         MeteoWSKlijent.dodajUredaj(uredaj);
     }
+    /**
+     * Metoda preuzima meteo podatke za uređaje. Ako nisu unešeni od - do parametri tada se dohvaćaju svi podaci,
+     * inače se dohvaćaju podaci u zadanom rasponu
+     * @throws ClassNotFoundException_Exception
+     * @throws ParseException 
+     */
 
     public void preuzmiMeteoZa() throws ClassNotFoundException_Exception, ParseException {
+        if(ID.length==0){
+            pogreska = "Niste oznacili ni jedan uređaj!";
+            return;
+        }
         int id = ID[0];
         if (odDate.isEmpty() || doDate.isEmpty()) {
             preuzmiZadnje();
@@ -77,19 +98,38 @@ public class OdabirUredkaja {
 
     public void preuzmiZadnje() throws ClassNotFoundException_Exception {
         int id = ID[0];
-        meteoPodaci = MeteoWSKlijent.dajSveMeteoPodatkeZaUredjaj(id,0,System.currentTimeMillis());
+        meteoPodaci = MeteoWSKlijent.dajSveMeteoPodatkeZaUredjaj(id, 0, System.currentTimeMillis());
     }
 
+    /**
+     * Metoda služi za upis u bazu preko poziva REST servisa. Ako naziv ili adresa nije unešena tada
+     * se ispisuje pogreška. Inače se izrađuje json format zapisa te se poziva servis
+     * @throws MalformedURLException 
+     */
     public void upisiRESTPOST() throws MalformedURLException {
+        if(naziv.isEmpty() || adresa.isEmpty()){
+            pogreska = "Naziv ili adresa nije unešena";
+            return;
+        }
         MeteoRESTResourceContainer_JerseyClient mr = new MeteoRESTResourceContainer_JerseyClient();
-
         JsonObjectBuilder jo = Json.createObjectBuilder();
         jo.add("naziv", naziv);
         jo.add("adresa", adresa);
         mr.postJson(jo.build().toString());
     }
 
+    /**
+     * Služi za preuzimanje podataka sa REST servisa. U slučaju da je odabrano manje od 2 uređaja, tada
+     * se ispisuje pogreška te se ne radi upit prema servisu
+     * 
+     * @throws ParseException
+     * @throws DatatypeConfigurationException 
+     */
     public void preuzmiREST() throws ParseException, DatatypeConfigurationException {
+        if(ID.length<2){
+            pogreska = "Odabrano manje od 2 uredaja";
+            return;
+        }
         meteoPodaci = new ArrayList<>();
         for (int j = 0; j < ID.length; j++) {
             MeteoRESTResourceContainer_JerseyClient mr = new MeteoRESTResourceContainer_JerseyClient(String.valueOf(ID[j]));
@@ -146,7 +186,7 @@ public class OdabirUredkaja {
                 mp.setLastUpdate(greg);
                 meteoPodaci.add(mp);
             }
-        */
+             */
         }
     }
 
@@ -154,6 +194,14 @@ public class OdabirUredkaja {
     public List<Uredjaj> getUredjaji() throws ClassNotFoundException_Exception {
         uredjaji = MeteoWSKlijent.dajSveUredjaje();
         return uredjaji;
+    }
+
+    public String getPogreska() {
+        return pogreska;
+    }
+
+    public void setPogreska(String pogreska) {
+        this.pogreska = pogreska;
     }
 
     public void setUredjaji(List<Uredjaj> uredjaji) {
@@ -236,6 +284,7 @@ public class OdabirUredkaja {
         public void close() {
             client.close();
         }
+
     }
 
 }
